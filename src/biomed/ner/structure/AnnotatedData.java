@@ -18,30 +18,12 @@
  * see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
  *
  */
-package biomed.ner.datasets.impl;
-
-import biomed.ner.datasets.iDatasetReader;
-import biomed.ner.structure.AnnotatedData;
+package biomed.ner.structure;
 
 /**
  *
  * @author Sebastian Hennig
  */
-public class NCBIReader implements iDatasetReader{
-    
-    private String[] inputData;
-    
-    private AnnotatedData[] labelData;
-    
-
-    @Override
-    public void loadDataset(String path, String[] files) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void parseDataset() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class AnnotatedData {
     
 }
