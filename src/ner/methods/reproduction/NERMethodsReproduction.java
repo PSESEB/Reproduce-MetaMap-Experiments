@@ -14,6 +14,8 @@ import bioc.BioCDocument;
 import gov.nih.nlm.nls.metamap.document.FreeText;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -27,6 +29,11 @@ public class NERMethodsReproduction {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        Pattern p = Pattern.compile("^[0-9]+\\|(a|t)\\|");
+        Matcher m = p.matcher("8808605|a|Somatic-cell selection is a major determinant of the blood-cell phenotype in heterozygotes for glucose-6-phosphate dehydrogenase mutations causing severe enzyme deficiency.");  
+        System.out.println(m.find());
+        System.out.println(m.pattern());
         
         NERMethodsReproduction ner = new NERMethodsReproduction();
         try {

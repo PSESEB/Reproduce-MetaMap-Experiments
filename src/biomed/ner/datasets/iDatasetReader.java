@@ -29,9 +29,9 @@ public interface iDatasetReader {
     /**
      * Reads the file/files
      * @param path path to dataset files
-     * @param files filenames if [] then all files in path are loaded
+     * @param file file name
      */
-    public void loadDataset(String path,String[] files);
+    public void loadDataset(String path,String file);
     /**
      * parses dataset to internal structure
      */

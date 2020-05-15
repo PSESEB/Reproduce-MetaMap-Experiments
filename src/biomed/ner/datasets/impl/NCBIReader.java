@@ -20,8 +20,13 @@
  */
 package biomed.ner.datasets.impl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.structure.AnnotatedData;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
  *
@@ -29,14 +34,40 @@ import biomed.ner.structure.AnnotatedData;
  */
 public class NCBIReader implements iDatasetReader{
     
-    private String[] inputData;
+    private ArrayList<String> inputData;
     
-    private AnnotatedData[] labelData;
+    private ArrayList<AnnotatedData> labelData;
     
 
     @Override
-    public void loadDataset(String path, String[] files) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void loadDataset(String path, String file) {
+        
+        
+        String full_path = path + file;
+        BufferedReader br = new BufferedReader(new FileReader(full_path));
+        
+        this.inputData = new ArrayList<String>();
+        //Find abstracts and titles
+        Pattern p = Pattern.compile("^[0-9]+\\|(a|t)\\|");
+        Matcher m;  
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                m = p.matcher(line);
+                if(m.find()){
+                    this.inputData.add(line);
+                }else{
+                    sb.append(line);
+                    sb.append(System.lineSeparator());
+                }
+                line = br.readLine();
+            }
+            String annotatedData = sb.toString();
+        } finally {
+            br.close();
+        }
     }
 
     @Override
