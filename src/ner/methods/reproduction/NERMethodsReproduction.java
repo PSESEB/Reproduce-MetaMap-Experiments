@@ -11,11 +11,12 @@ import java.lang.reflect.InvocationTargetException;
 import gov.nih.nlm.nls.metamap.lite.types.Entity;
 import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import bioc.BioCDocument;
+import biomed.ner.datasets.iDatasetReader;
+import biomed.ner.datasets.impl.NCBIReader;
 import gov.nih.nlm.nls.metamap.document.FreeText;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  *
@@ -30,10 +31,10 @@ public class NERMethodsReproduction {
      */
     public static void main(String[] args) {
         
-        Pattern p = Pattern.compile("^[0-9]+\\|(a|t)\\|");
-        Matcher m = p.matcher("8808605|a|Somatic-cell selection is a major determinant of the blood-cell phenotype in heterozygotes for glucose-6-phosphate dehydrogenase mutations causing severe enzyme deficiency.");  
-        System.out.println(m.find());
-        System.out.println(m.pattern());
+        iDatasetReader ncbi = new NCBIReader();
+        
+        ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt");
+        
         
         NERMethodsReproduction ner = new NERMethodsReproduction();
         try {

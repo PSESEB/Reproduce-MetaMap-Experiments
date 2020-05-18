@@ -26,4 +26,42 @@ package biomed.ner.structure;
  */
 public class AnnotatedData {
     
+    /**
+     * Label which should be the same for the corresponding text
+     */
+    private String identifier;
+    
+    /**
+     * CUI that was annotated in corresponding text
+     */
+    private String annotatedCUI;
+
+    /**
+     * Creates CUI annotation for corresponding text identified with id.
+     * @param id identifier of this label
+     * @param cui CUI for this label
+     */
+    public AnnotatedData(String id, String cui){
+        this.identifier = id;
+        this.annotatedCUI = cui;
+    }
+    
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getAnnotatedCUI() {
+        return annotatedCUI;
+    }
+
+    public void setAnnotatedCUI(String annotatedCUI) {
+        this.annotatedCUI = annotatedCUI;
+    }
+    
+    
+    
 }
