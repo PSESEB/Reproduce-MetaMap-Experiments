@@ -48,12 +48,15 @@ public class NCBIReader implements iDatasetReader{
     
     private String intermediateAnnotations;
     
+    private String datasetPath;
+    
 
     @Override
     public void loadDataset(String path, String file){
         
         
         String full_path = path + file;
+        this.datasetPath = path;
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(full_path));
@@ -107,24 +110,7 @@ public class NCBIReader implements iDatasetReader{
             Logger.getLogger(NCBIReader.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        HashMap<String,Set<String>> cuiMappings = this.loadMappings(path);
-         System.out.println("The size of the map is " + cuiMappings.size()); 
-
-        for(String annotation : this.intermediateAnnotations.split(System.lineSeparator())){
-            String[] annotationSplit = annotation.split(" ");
-            String identifier = annotationSplit[0];
-            Set<String> cuis = cuiMappings.get(annotationSplit[1]);
-            if(cuis == null){
-                System.out.println("CAUTION: No UMLS Concept found for "+annotationSplit[1]);
-                System.out.println(annotationSplit[1]+" is therefore removed from label set!");
-                continue;
-            }
-            for(String cui: cuis){
-                AnnotatedData label = new AnnotatedData(identifier, cui);
-                this.labelData.add(label);
-            }
-        }
-        System.out.println("SizeLables "+this.labelData.size());
+       
     }
     
     /**
@@ -184,7 +170,26 @@ public class NCBIReader implements iDatasetReader{
 
     @Override
     public void parseDataset() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+         HashMap<String,Set<String>> cuiMappings = this.loadMappings(this.datasetPath);
+         System.out.println("The size of the map is " + cuiMappings.size()); 
+
+        for(String annotation : this.intermediateAnnotations.split(System.lineSeparator())){
+            String[] annotationSplit = annotation.split(" ");
+            String identifier = annotationSplit[0];
+            Set<String> cuis = cuiMappings.get(annotationSplit[1]);
+            if(cuis == null){
+                System.out.println("CAUTION: No UMLS Concept found for "+annotationSplit[1]);
+                System.out.println(annotationSplit[1]+" is therefore removed from label set!");
+                continue;
+            }
+            for(String cui: cuis){
+                AnnotatedData label = new AnnotatedData(identifier, cui);
+                this.labelData.add(label);
+            }
+        }
+        System.out.println("SizeLables "+this.labelData.size());
+        
     }
     
 }
