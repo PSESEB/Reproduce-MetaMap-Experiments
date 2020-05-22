@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import gov.nih.nlm.nls.metamap.lite.types.Entity;
 import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import bioc.BioCDocument;
+import biomed.ner.structure.AnnotatedDataPoint;
 import gov.nih.nlm.nls.metamap.document.FreeText;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,10 +71,10 @@ public class MetaMapLiteModel implements iModel {
     }
 
     @Override
-    public AnnotatedData[] annotateText(String id,String text) {
+    public AnnotatedDataPoint annotateText(String id,String text) {
         
         //Create empty result set to be filled with suggested labels of Meta Map Lite
-        List<AnnotatedData> result = new  ArrayList<>();
+        AnnotatedDataPoint result = new AnnotatedDataPoint(id, new ArrayList<>());
         
         // Each document must be instantiated as a BioC document before processing
         
@@ -92,7 +93,7 @@ public class MetaMapLiteModel implements iModel {
                 for (Ev ev: entity.getEvSet()) 
                 {
                     // Add new output CUI
-                    result.add(new AnnotatedData(id, ev.getConceptInfo().getCUI()));
+                    result.addAnnotatedCUI(ev.getConceptInfo().getCUI());
 
                 }
             }
@@ -104,9 +105,8 @@ public class MetaMapLiteModel implements iModel {
             Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        AnnotatedData[] finalResult = result.toArray(new AnnotatedData[result.size()]);
  
-        return finalResult;
+        return result;
       
     }
     

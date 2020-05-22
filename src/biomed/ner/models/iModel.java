@@ -20,7 +20,7 @@
  */
 package biomed.ner.models;
 
-import biomed.ner.structure.AnnotatedData;
+import biomed.ner.structure.AnnotatedDataPoint;
 
 /**
  *
@@ -34,5 +34,5 @@ public interface iModel {
      * @param text Text to be annotated
      * @return annotations as suggested by model 
      */
-    public AnnotatedData[] annotateText(String id, String text);
+    public AnnotatedDataPoint annotateText(String id, String text);
 }

@@ -20,6 +20,9 @@
  */
 package biomed.ner.structure;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Hennig
@@ -27,41 +30,52 @@ package biomed.ner.structure;
 public class AnnotatedData {
     
     /**
-     * Label which should be the same for the corresponding text
+     * Dataset containing all annotated labels.
+     * Keys are ids also used for corresponding text
+     * Values are is the annotatedDatapoint for a specific text.
      */
-    private String identifier;
-    
-    /**
-     * CUI that was annotated in corresponding text
-     */
-    private String annotatedCUI;
+    private Map<String,AnnotatedDataPoint> datapoints;
 
-    /**
-     * Creates CUI annotation for corresponding text identified with id.
-     * @param id identifier of this label
-     * @param cui CUI for this label
-     */
-    public AnnotatedData(String id, String cui){
-        this.identifier = id;
-        this.annotatedCUI = cui;
+    public AnnotatedData(){
+        this.datapoints = new HashMap<>();
     }
     
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getAnnotatedCUI() {
-        return annotatedCUI;
-    }
-
-    public void setAnnotatedCUI(String annotatedCUI) {
-        this.annotatedCUI = annotatedCUI;
+    public void addDatapoint(AnnotatedDataPoint adp){
+        
+        AnnotatedDataPoint existingAdp = this.datapoints.get(adp.getIdentifier());
+        if(existingAdp == null){
+            this.datapoints.put(adp.getIdentifier(), adp);
+        }else{
+            for(String cui : adp.getAnnotatedCUIs()){
+                existingAdp.addAnnotatedCUI(cui);
+            }
+            this.datapoints.put(existingAdp.getIdentifier(),existingAdp);
+        }
     }
     
+    public void addDatapoint(String identifier, String cui){
+        AnnotatedDataPoint existingAdp = this.datapoints.get(identifier);
+          if(existingAdp == null){
+            this.datapoints.put(identifier, new AnnotatedDataPoint(identifier, cui));
+        }else{
+            existingAdp.addAnnotatedCUI(cui);
+            this.datapoints.put(existingAdp.getIdentifier(),existingAdp);
+        }
+         
+    }
     
+    public Map<String,AnnotatedDataPoint> getAllDatapoints(){
+        return this.datapoints;
+    }
+    
+    public AnnotatedDataPoint getDataPoint(String identifier){
+        return this.datapoints.get(identifier);
+        
+    }
+    
+    public int size(){
+        return this.datapoints.size();
+                
+    }
     
 }

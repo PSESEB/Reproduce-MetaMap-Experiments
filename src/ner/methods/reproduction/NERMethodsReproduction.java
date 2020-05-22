@@ -11,6 +11,7 @@ import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.models.iModel;
 import biomed.ner.models.impl.MetaMapLiteModel;
 import biomed.ner.structure.AnnotatedData;
+import biomed.ner.structure.AnnotatedDataPoint;
 
 
 /**
@@ -34,10 +35,11 @@ public class NERMethodsReproduction {
         
         iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite");
        
-        AnnotatedData[] out = metaMapLite.annotateText("heppa","lung cancer bitches D008661 Inborn Errors of Metabolism");
-        
-        for(AnnotatedData ad : out){
-            System.out.println(ad.getIdentifier()+" <-> "+ad.getAnnotatedCUI());
+        AnnotatedDataPoint out = metaMapLite.annotateText("heppa","lung cancer bitches D008661 Inborn Errors of Metabolism");
+      
+        for(String ad : out.getAnnotatedCUIs()){
+           
+//          System.out.println(out.getIdentifier()+" <-> "+ad);
         }
         
        

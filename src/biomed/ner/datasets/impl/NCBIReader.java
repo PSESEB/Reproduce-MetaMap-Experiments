@@ -24,14 +24,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.structure.AnnotatedData;
+import biomed.ner.structure.AnnotatedDataPoint;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,11 +45,13 @@ public class NCBIReader implements iDatasetReader{
     
     private ArrayList<String> inputData;
     
-    private ArrayList<AnnotatedData> labelData;
+    private AnnotatedData labelData;
     
     private String intermediateAnnotations;
     
     private String datasetPath;
+    
+    private Map<String,String> parsedInput;
     
 
     @Override
@@ -63,7 +66,7 @@ public class NCBIReader implements iDatasetReader{
        
         
         this.inputData = new ArrayList<>();
-        this.labelData = new ArrayList<>();
+        this.labelData = new AnnotatedData();
         //Find abstracts and titles
         Pattern p = Pattern.compile("^[0-9]+\\|(a|t)\\|");
         Matcher m;  
@@ -171,9 +174,13 @@ public class NCBIReader implements iDatasetReader{
     @Override
     public void parseDataset() {
         
+        //PARSE LABELS
+        
+        //Create HashMap to store MeSH and OMIM identifiers corresponding CUIs
          HashMap<String,Set<String>> cuiMappings = this.loadMappings(this.datasetPath);
          System.out.println("The size of the map is " + cuiMappings.size()); 
-
+        
+         //Load different files containing mappings and writing them into the map
         for(String annotation : this.intermediateAnnotations.split(System.lineSeparator())){
             String[] annotationSplit = annotation.split(" ");
             String identifier = annotationSplit[0];
@@ -184,11 +191,26 @@ public class NCBIReader implements iDatasetReader{
                 continue;
             }
             for(String cui: cuis){
-                AnnotatedData label = new AnnotatedData(identifier, cui);
-                this.labelData.add(label);
+                
+                this.labelData.addDatapoint(new AnnotatedDataPoint(identifier, cui));
             }
         }
+        
         System.out.println("SizeLables "+this.labelData.size());
+        
+        //PARSE INPUT DATA
+        this.parsedInput = new HashMap<>();
+        for(String input: this.inputData){
+            String[] split = input.split("\\|");
+            if(this.parsedInput.get(split[0]) == null){
+                this.parsedInput.put(split[0], split[2]);
+            }else{
+                this.parsedInput.put(split[0], this.parsedInput.get(split[0])+" "+split[2]);
+            }
+        }
+        
+        System.out.println("Input Size: "+this.parsedInput.size());
+        
         
     }
     
