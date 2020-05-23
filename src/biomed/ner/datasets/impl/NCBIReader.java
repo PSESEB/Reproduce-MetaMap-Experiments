@@ -203,15 +203,26 @@ public class NCBIReader implements iDatasetReader{
         for(String input: this.inputData){
             String[] split = input.split("\\|");
             if(this.parsedInput.get(split[0]) == null){
-                this.parsedInput.put(split[0], split[2]);
+                //Parse in NCBI format
+                this.parsedInput.put(split[0],split[0]+"\t"+split[2]);
             }else{
-                this.parsedInput.put(split[0], this.parsedInput.get(split[0])+" "+split[2]);
+                this.parsedInput.put(split[0], this.parsedInput.get(split[0])+"\t"+split[2]);
             }
         }
         
         System.out.println("Input Size: "+this.parsedInput.size());
         
         
+    }
+
+    @Override
+    public Map<String, String> getInputData() {
+            return this.parsedInput;
+    }
+
+    @Override
+    public AnnotatedData getLabelData() {
+        return this.labelData;
     }
     
 }

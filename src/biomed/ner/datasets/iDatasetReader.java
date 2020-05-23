@@ -20,6 +20,9 @@
  */
 package biomed.ner.datasets;
 
+import biomed.ner.structure.AnnotatedData;
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Hennig
@@ -36,5 +39,20 @@ public interface iDatasetReader {
      * parses dataset to internal structure
      */
     public void parseDataset();
+    
+    /**
+     * Returns the parsed Input Data ready to use with model.
+     * 
+     * @return map where key string is identifier of the text
+     * and the value is the actual text that should be run through the model
+     * 
+     */
+    public Map<String,String> getInputData();
+    
+    /**
+     * Returns annotated labels that need to be compared to output of the model
+     * @return Annotated dataset
+     */
+    public AnnotatedData getLabelData();
     
 }

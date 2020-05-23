@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  *
+ * Structure to store annotated labels
  * @author Sebastian Hennig
  */
 public class AnnotatedData {

@@ -21,7 +21,6 @@
 package biomed.ner.models.impl;
 
 import biomed.ner.models.iModel;
-import biomed.ner.structure.AnnotatedData;
 import java.util.Properties;
 import gov.nih.nlm.nls.ner.MetaMapLite;
 import java.util.*;
@@ -31,7 +30,8 @@ import gov.nih.nlm.nls.metamap.lite.types.Entity;
 import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import bioc.BioCDocument;
 import biomed.ner.structure.AnnotatedDataPoint;
-import gov.nih.nlm.nls.metamap.document.FreeText;
+import gov.nih.nlm.nls.metamap.document.NCBICorpusDocument;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,8 +47,9 @@ public class MetaMapLiteModel implements iModel {
     /**
      * Instantiate MetaMapLite
      * @param mml_folder 
+     * @param semanticGroups 
      */
-    public MetaMapLiteModel(String mml_folder){
+    public MetaMapLiteModel(String mml_folder, String semanticGroups){
           // Initialization Section
         
         Properties myProperties = new Properties();
@@ -62,7 +63,7 @@ public class MetaMapLiteModel implements iModel {
         myProperties.setProperty("opennlp.en-sent.bin.path", mml_folder + "/data/models/en-sent.bin");
         myProperties.setProperty("opennlp.en-token.bin.path", mml_folder + "/data/models/en-token.bin");
         
-       // myProperties.setProperty("metamaplite.sourceset", "MSH");
+        myProperties.setProperty("metamaplite.semanticgroup", semanticGroups);
         try {
             m_metaMapLiteInst = new MetaMapLite(myProperties);
         } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException | IOException ex) {
@@ -78,7 +79,9 @@ public class MetaMapLiteModel implements iModel {
         
         // Each document must be instantiated as a BioC document before processing
         
-        BioCDocument document = FreeText.instantiateBioCDocument(text);
+        BioCDocument document = NCBICorpusDocument.instantiateBioCDocument(text);
+        
+        
         
         // Proccess the document with Metamap
         
