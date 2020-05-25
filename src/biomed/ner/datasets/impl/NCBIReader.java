@@ -38,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Reads and parses NCBI datasets to the internal structure needed
  * @author Sebastian Hennig
  */
 public class NCBIReader implements iDatasetReader{
@@ -67,7 +67,7 @@ public class NCBIReader implements iDatasetReader{
         
         this.inputData = new ArrayList<>();
         this.labelData = new AnnotatedData();
-        //Find abstracts and titles
+        //Find abstracts and titles with regex
         Pattern p = Pattern.compile("^[0-9]+\\|(a|t)\\|");
         Matcher m;  
         try {
@@ -77,11 +77,13 @@ public class NCBIReader implements iDatasetReader{
             while (line != null) {
                 m = p.matcher(line);
                 if(m.find()){
+                    //if regex matches: add to input
                     this.inputData.add(line);
                 }else{
+                    //else add to labels
                     String[] split = line.split("\t");
                     if(split.length > 1){
-                        
+                        //Parse Labels
                         String label = split[split.length -1];
                         if(label.contains("|") || label.contains("+")){
                             String[] splitLabels = label.contains("|") ? label.split("\\|") : label.split("\\+");
@@ -127,9 +129,11 @@ public class NCBIReader implements iDatasetReader{
         //NCBI tag as key CUI as value
         HashMap<String, Set<String>> cuiMapping = new HashMap<>();
         BufferedReader br;
+        //Define Mapping Files
         String[] mappingFiles = {"MHcui","OMIMcui","MHCcui"};
         for(String mappingFile : mappingFiles){
             try {
+                //Read mapping files
                br = new BufferedReader(new FileReader(path+mappingFile));
 
            try {
@@ -140,9 +144,12 @@ public class NCBIReader implements iDatasetReader{
                    
                    String[] split = line.split("\\|");
                    
+                   //Put OMIM identifiers in correct syntax
                    if(mappingFile.equals("OMIMcui")){
                        split[1] = "OMIM:"+split[1];
                    }
+                   //Add mapping to a key value map
+                   //Keys are OMIM,MeSH identifiers and values are corresponding cui(s)
                    Set<String> currVal = cuiMapping.get(split[1]);             
                    if(currVal == null){
                        Set<String> newSet = new HashSet<>();

@@ -24,7 +24,7 @@ import biomed.ner.structure.AnnotatedData;
 import java.util.Map;
 
 /**
- *
+ * Interface for Dataset Readers
  * @author Sebastian Hennig
  */
 public interface iDatasetReader {

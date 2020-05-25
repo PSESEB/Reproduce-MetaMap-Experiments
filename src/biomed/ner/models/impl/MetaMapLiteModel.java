@@ -31,13 +31,13 @@ import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import bioc.BioCDocument;
 import biomed.ner.structure.AnnotatedDataPoint;
 import gov.nih.nlm.nls.metamap.document.NCBICorpusDocument;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /**
  *
+ * Provides Meta Map Lite Model
  * @author Sebastian Hennig
  */
 public class MetaMapLiteModel implements iModel {
@@ -63,6 +63,7 @@ public class MetaMapLiteModel implements iModel {
         myProperties.setProperty("opennlp.en-sent.bin.path", mml_folder + "/data/models/en-sent.bin");
         myProperties.setProperty("opennlp.en-token.bin.path", mml_folder + "/data/models/en-token.bin");
         
+        //Add fitting semantic groups
         myProperties.setProperty("metamaplite.semanticgroup", semanticGroups);
         try {
             m_metaMapLiteInst = new MetaMapLite(myProperties);
@@ -89,7 +90,7 @@ public class MetaMapLiteModel implements iModel {
         try {
             entityList = m_metaMapLiteInst.processDocument(document);
             
-              // For each keyphrase, select the first CUI candidate and replace in text.
+              // Add each found CUI to result
         
             for (Entity entity: entityList) 
             {

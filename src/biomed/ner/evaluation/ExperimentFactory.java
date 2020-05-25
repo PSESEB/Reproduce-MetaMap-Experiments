@@ -32,26 +32,35 @@ import biomed.ner.models.impl.MetaMapLiteModel;
  */
 public class ExperimentFactory {
     
-    
+    /**
+     * Creates a specific Experiment according to the dataset and model name.
+     * @param dataset String
+     * @param model String
+     * @return Experiment
+     */
     public static Experiment getExperiment(String dataset, String model){
         
         Experiment exp = new Experiment();
         String semanticGroup = "";
+        //First check which Dataset is choosen
         switch(dataset){
             case "NCBI":
+                //Create NCBI Reader
                 iDatasetReader ncbi = new NCBIReader();
                 ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItestset_corpus.txt");
                 ncbi.parseDataset();
                 exp.setDataset(ncbi);
+                //Semantic Groups for NCBI
                 semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
                 break;
             default:
                 System.out.println("Datset Not Found! No dataset was loaded.");
         }
-        
+        //Check which Model should be used for dataset
         switch(model){
             case "MetaMapLite":
             case "MML":
+                //instantiate new Meta Map Lite Model
                 iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite",semanticGroup);
                 exp.setModel(metaMapLite);
                 break;

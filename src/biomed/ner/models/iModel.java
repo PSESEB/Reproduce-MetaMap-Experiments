@@ -23,7 +23,7 @@ package biomed.ner.models;
 import biomed.ner.structure.AnnotatedDataPoint;
 
 /**
- *
+ * Interface for NER Models
  * @author Sebastian Hennig
  */
 public interface iModel {

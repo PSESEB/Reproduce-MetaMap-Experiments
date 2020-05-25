@@ -21,7 +21,6 @@
 package biomed.ner.evaluation;
 
 import biomed.ner.datasets.iDatasetReader;
-import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
 import java.util.*;
@@ -63,22 +62,28 @@ public class Experiment {
         //Necessary to run experiment.
         assert this.dataset != null : "No datset loaded";
         assert this.model != null : "No model loaded";
+        //Create counts for relevant, retrieved and contained in both
+        //Later used to calculate Precision and Recall
         int totalNumRelevant = 0;
         int totalNumRetrieved = 0;
         int totalNumIntersection = 0;
         
+        //Iterate over Dataset
         for (Map.Entry<String, String> entry : this.dataset.getInputData().entrySet()) {
             Logger.getLogger(Experiment.class.getName()).log(Level.INFO,"Processing Datapoint with ID "+entry.getKey());
-            
+            //get id of document
             String key = entry.getKey();
+            //Get document
             String value = entry.getValue();
+            //Compare result of Meta Map Lite on document to annotated Dataset
             List<Set<String>> comparisons = this.compare(this.dataset.getLabelData().getDataPoint(key),this.model.annotateText(key, value));
+            //Update counts
             totalNumRelevant += this.getNumRelevant(comparisons);
             totalNumRetrieved += this.getNumRetrieved(comparisons);
             totalNumIntersection += this.getNumIntersection(comparisons);
 //            System.out.println("rel "+totalNumRelevant+" ret "+totalNumRetrieved+" int "+totalNumIntersection);
         }
-        
+        //Calculate Measures
         double precision = this.calcPrecision(totalNumIntersection, totalNumRetrieved);
         double recall = this.calcRecall(totalNumIntersection, totalNumRelevant);
         double f1 = this.calcFMeasure(precision, recall);
@@ -163,9 +168,15 @@ public class Experiment {
         }
     }
     
-    
+    /**
+     * Compares two sets of CUIs to each other
+     * @param labels
+     * @param modelOut
+     * @return 3 sets namely: {cuis only in labelset}, {cuis only in outputset}, {cuis occuring in both sets}
+     */
     private List<Set<String>> compare(AnnotatedDataPoint labels, AnnotatedDataPoint modelOut){
         
+        //Convert list to set to remove duplicates
         Set<String> labelSet = new HashSet(labels.getAnnotatedCUIs());
         Set<String> outSet = new HashSet(modelOut.getAnnotatedCUIs());
         

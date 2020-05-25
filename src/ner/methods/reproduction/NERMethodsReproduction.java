@@ -1,7 +1,22 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016-2017 Universidad Nacional de Educación a Distancia (UNED)
+ *
+ * This program is free software for non-commercial use:
+ * you can redistribute it and/or modify it under the terms of the
+ * Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+ * (CC BY-NC-SA 4.0) as published by the Creative Commons Corporation,
+ * either version 4 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * section 5 of the CC BY-NC-SA 4.0 License for more details.
+ *
+ * You should have received a copy of the Creative Commons
+ * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) 
+ * license along with this program. If not,
+ * see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
+ *
  */
 package ner.methods.reproduction;
 
@@ -11,12 +26,13 @@ import biomed.ner.evaluation.ExperimentFactory;
 
 
 /**
- *
- * @author weenzeal
+ * Main class to run experiments
+ * @author Sebastian Hennig
  */
 public class NERMethodsReproduction {
 
     /**
+     * runs the experiments
      * @param args the command line arguments
      */
     public static void main(String[] args) {

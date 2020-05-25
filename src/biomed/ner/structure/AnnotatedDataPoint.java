@@ -50,7 +50,11 @@ public class AnnotatedDataPoint {
         this.annotatedCUIs.add(cui);
                 
     }
-    
+    /**
+     * Creates CUIs annotation for corresponding text identified with id.
+     * @param id identifier of this label
+     * @param cuis list of CUIs for this label
+     */
     public AnnotatedDataPoint(String id, List<String> cuis){
         this.identifier = id;
         this.annotatedCUIs = cuis;

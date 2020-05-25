@@ -41,6 +41,10 @@ public class AnnotatedData {
         this.datapoints = new HashMap<>();
     }
     
+    /**
+     * Adds Datapoint to dataset
+     * @param adp 
+     */
     public void addDatapoint(AnnotatedDataPoint adp){
         
         AnnotatedDataPoint existingAdp = this.datapoints.get(adp.getIdentifier());
@@ -53,7 +57,11 @@ public class AnnotatedData {
             this.datapoints.put(existingAdp.getIdentifier(),existingAdp);
         }
     }
-    
+    /**
+     * Creates datapoint and adds it to dataset
+     * @param identifier
+     * @param cui 
+     */
     public void addDatapoint(String identifier, String cui){
         AnnotatedDataPoint existingAdp = this.datapoints.get(identifier);
           if(existingAdp == null){
@@ -64,16 +72,28 @@ public class AnnotatedData {
         }
          
     }
-    
+    /**
+     * Gives all datapoints
+     * @return all datapoints
+     */
     public Map<String,AnnotatedDataPoint> getAllDatapoints(){
         return this.datapoints;
     }
     
+    /**
+     * Get specific Datapoint
+     * @param identifier
+     * @return AnnotatedDataPoint
+     */
     public AnnotatedDataPoint getDataPoint(String identifier){
         return this.datapoints.get(identifier);
         
     }
     
+    /**
+     * Returns number of datapoints in dataset
+     * @return 
+     */
     public int size(){
         return this.datapoints.size();
                 
