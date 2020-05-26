@@ -47,7 +47,7 @@ public class ExperimentFactory {
             case "NCBI":
                 //Create NCBI Reader
                 iDatasetReader ncbi = new NCBIReader();
-                ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItestset_corpus.txt");
+                ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBIdevelopset_corpus.txt","Disorder,GeneralDisorder");
                 ncbi.parseDataset();
                 exp.setDataset(ncbi);
                 //Semantic Groups for NCBI

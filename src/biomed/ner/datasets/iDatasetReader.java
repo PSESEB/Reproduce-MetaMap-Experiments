@@ -33,8 +33,9 @@ public interface iDatasetReader {
      * Reads the file/files
      * @param path path to dataset files
      * @param file file name
+     * @param settings additional settings
      */
-    public void loadDataset(String path,String file);
+    public void loadDataset(String path,String file,String settings);
     /**
      * parses dataset to internal structure
      */

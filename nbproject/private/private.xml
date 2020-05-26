@@ -7,9 +7,11 @@
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/datasets/iDatasetReader.java</file>
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/evaluation/Experiment.java</file>
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/structure/AnnotatedData.java</file>
+            <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/models/iModel.java</file>
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/ner/methods/reproduction/NERMethodsReproduction.java</file>
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/datasets/impl/NCBIReader.java</file>
             <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/evaluation/ExperimentFactory.java</file>
+            <file>file:/home/weenzeal/Documents/workspaceLinux/NERMethodsReproduction/src/biomed/ner/structure/AnnotatedDataPoint.java</file>
         </group>
     </open-files>
 </project-private>

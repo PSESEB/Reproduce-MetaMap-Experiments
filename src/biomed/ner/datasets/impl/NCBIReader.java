@@ -29,13 +29,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Reads and parses NCBI datasets to the internal structure needed
@@ -55,12 +52,20 @@ public class NCBIReader implements iDatasetReader{
     
 
     @Override
-    public void loadDataset(String path, String file){
+    public void loadDataset(String path, String file,String settings){
         
         
         String full_path = path + file;
         this.datasetPath = path;
         BufferedReader br;
+        //Save different Entity Types that should be scanned for
+        String[] entityTypes;
+        if(settings.isEmpty()){
+            entityTypes = new String[0];
+        }else{
+            entityTypes = settings.split(",");
+        }
+        
         try {
             br = new BufferedReader(new FileReader(full_path));
        
@@ -83,6 +88,14 @@ public class NCBIReader implements iDatasetReader{
                     //else add to labels
                     String[] split = line.split("\t");
                     if(split.length > 1){
+                        //TODO GEHT NET!!!!
+                        //alles nehmen und text
+                        System.out.println(entityTypes[0]+" "+entityTypes[1]);
+                        System.out.println(split[split.length-2]);
+                        if( Arrays.stream(entityTypes).anyMatch(split[split.length-2]::equals)){
+                            
+                        System.out.println(Arrays.asList(split).toString());
+                        }
                         //Parse Labels
                         String label = split[split.length -1];
                         if(label.contains("|") || label.contains("+")){

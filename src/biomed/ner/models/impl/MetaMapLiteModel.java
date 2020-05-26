@@ -84,18 +84,29 @@ public class MetaMapLiteModel implements iModel {
         
         
         
+        
         // Proccess the document with Metamap
         
         List<Entity> entityList;
         try {
             entityList = m_metaMapLiteInst.processDocument(document);
+           
             
               // Add each found CUI to result
         
             for (Entity entity: entityList) 
             {
+              String cmpS = entity.getEvList().get(0).getConceptString();
+              int start = entity.getFieldId().equals("title") ? entity.getOffset() : document.getPassage(0).getText().length()+ entity.getOffset()+1;
+              int end = entity.getFieldId().equals("title") ? entity.getOffset()+entity.getLength() : document.getPassage(0).getText().length()+ entity.getOffset()+entity.getLength()+1;
+                System.out.println(start);
+                System.out.println(end);
                 for (Ev ev: entity.getEvSet()) 
                 {
+                    if(!cmpS.equals(ev.getConceptString())){
+                        
+                    System.out.println(cmpS+" "+ev.getConceptString());
+                    }
                     // Add new output CUI
                     result.addAnnotatedCUI(ev.getConceptInfo().getCUI());
 
