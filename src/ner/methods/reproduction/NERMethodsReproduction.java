@@ -28,6 +28,7 @@ import biomed.ner.structure.AtomStringLabel;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicStampedReference;
+import gov.nih.nlm.nls.metamap.lite.resultformats.Brat;
 
 
 
@@ -45,23 +46,11 @@ public class NERMethodsReproduction {
         
        
     Experiment ncbiMML = ExperimentFactory.getExperiment("NCBI", "MML");
-    //ncbiMML.runExperiment();
+    ncbiMML.runExperiment();
 
-     AtomStringLabel ast = new AtomStringLabel("hallo",1,2);
-     AtomStringLabel ast2 = new AtomStringLabel("hallo",1,23);
-     AtomStringLabel ast3 = new AtomStringLabel("hallo",1,2);
-     Set<AtomStringLabel> kd = new HashSet();
-     kd.add(ast3);
-        AnnotatedStringDataPoint blub = new AnnotatedStringDataPoint("hallo", ast);
-        System.out.println(blub.getAnnotatedConcepts().size());
-        System.out.println("EQUALS "+ast.equals(ast2));
-        blub.addConcept(ast2);
-        blub.getAnnotatedConcepts().removeAll(kd);
-        System.out.println(blub.getAnnotatedConcepts().toString());
         
      
-     AnnotatedDataPoint bla = ncbiMML.getModel().annotateText("heppa", "123\tGermline BRCA1 alterations in a population-based series of ovarian cancer cases.\tThe objective of this study was to provide more accurate frequency estimates of breast cancer susceptibility gene 1 (BRCA1) germline alterations in the ovarian cancer population. To achieve this, we determined the prevalence of BRCA1 alterations in a population-based series of consecutive ovarian cancer cases. This is the first population-based ovarian cancer study reporting BRCA1 alterations derived from a comprehensive screen of the entire coding region. One hundred and seven ovarian cancer cases were analyzed for BRCA1 alterations using the RNase mismatch cleavage assay followed by direct sequencing. Two truncating mutations, 962del4 and 3600del11, were identified. Both patients had a family history of breast or ovarian cancer. Several novel as well as previously reported uncharacterized variants were also identified, some of which were associated with a family history of cancer. The frequency distribution of common polymorphisms was determined in the 91 Caucasian cancer cases in this series and 24 sister controls using allele-specific amplification. The rare form of the Q356R polymorphism was significantly (P = 0. 03) associated with a family history of ovarian cancer, suggesting that this polymorphism may influence ovarian cancer risk. In summary, our data suggest a role for some uncharacterized variants and rare forms of polymorphisms in determining ovarian cancer risk, and highlight the necessity to screen for missense alterations as well as truncating mutations in this population.");
-        System.out.println(bla.getAnnotatedCUIs().toString());
+    
     }
     
    

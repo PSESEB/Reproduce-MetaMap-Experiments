@@ -42,12 +42,18 @@ public class AnnotatedStringDataPoint {
     /**
      * Creates CUI annotation for corresponding text identified with id.
      * @param id identifier of this label
-     * @param cui CUI for this label
+     * @param concept
      */
     public AnnotatedStringDataPoint(String id, AtomStringLabel concept){
         this.identifier = id;
         this.annotatedConcepts = new HashSet();
         this.annotatedConcepts.add(concept);
+                
+    }
+    
+    public AnnotatedStringDataPoint(String id){
+        this.identifier = id;
+        this.annotatedConcepts = new HashSet();
                 
     }
     

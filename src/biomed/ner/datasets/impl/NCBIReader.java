@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.structure.AnnotatedData;
 import biomed.ner.structure.AnnotatedDataPoint;
+import biomed.ner.structure.AnnotatedStringDataPoint;
+import biomed.ner.structure.AtomStringLabel;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -49,6 +51,7 @@ public class NCBIReader implements iDatasetReader{
     private String datasetPath;
     
     private Map<String,String> parsedInput;
+    
     
 
     @Override
@@ -88,14 +91,10 @@ public class NCBIReader implements iDatasetReader{
                     //else add to labels
                     String[] split = line.split("\t");
                     if(split.length > 1){
-                        //TODO GEHT NET!!!!
-                        //alles nehmen und text
-                        System.out.println(entityTypes[0]+" "+entityTypes[1]);
-                        System.out.println(split[split.length-2]);
-                        if( Arrays.stream(entityTypes).anyMatch(split[split.length-2]::equals)){
-                            
-                        System.out.println(Arrays.asList(split).toString());
-                        }
+                        
+                        AtomStringLabel asl = new AtomStringLabel(split[3], Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+                        
+                        labelData.addDatapoint(split[0], asl);
                         //Parse Labels
                         String label = split[split.length -1];
                         if(label.contains("|") || label.contains("+")){
@@ -196,27 +195,7 @@ public class NCBIReader implements iDatasetReader{
         
         //PARSE LABELS
         
-        //Create HashMap to store MeSH and OMIM identifiers corresponding CUIs
-         HashMap<String,Set<String>> cuiMappings = this.loadMappings(this.datasetPath);
-         System.out.println("The size of the map is " + cuiMappings.size()); 
-        
-         //Load different files containing mappings and writing them into the map
-        for(String annotation : this.intermediateAnnotations.split(System.lineSeparator())){
-            String[] annotationSplit = annotation.split(" ");
-            String identifier = annotationSplit[0];
-            Set<String> cuis = cuiMappings.get(annotationSplit[1]);
-            if(cuis == null){
-                System.out.println("CAUTION: No UMLS Concept found for "+annotationSplit[1]);
-                System.out.println(annotationSplit[1]+" is therefore removed from label set!");
-                continue;
-            }
-            for(String cui: cuis){
-                
-                this.labelData.addDatapoint(new AnnotatedDataPoint(identifier, cui));
-            }
-        }
-        
-        System.out.println("SizeLables "+this.labelData.size());
+        System.out.println("Size Lables "+this.labelData.size());
         
         //PARSE INPUT DATA
         this.parsedInput = new HashMap<>();

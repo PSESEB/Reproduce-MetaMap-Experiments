@@ -21,6 +21,7 @@
 package biomed.ner.models;
 
 import biomed.ner.structure.AnnotatedDataPoint;
+import biomed.ner.structure.AnnotatedStringDataPoint;
 
 /**
  * Interface for NER Models
@@ -34,5 +35,14 @@ public interface iModel {
      * @param text Text to be annotated
      * @return annotations as suggested by model 
      */
-    public AnnotatedDataPoint annotateText(String id, String text);
+    public AnnotatedStringDataPoint annotateText(String id, String text);
+    
+     /**
+     * Annotates given text.
+     * An id needs to be provided so it can later be mapped to the corresponding label.
+     * @param id Identifier of the String that should be annotated
+     * @param text Text to be annotated
+     * @return annotations as suggested by model 
+     */
+    public AnnotatedDataPoint annotateTextCUI(String id, String text);
 }

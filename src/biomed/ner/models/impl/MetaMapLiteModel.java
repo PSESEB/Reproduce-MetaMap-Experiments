@@ -30,7 +30,10 @@ import gov.nih.nlm.nls.metamap.lite.types.Entity;
 import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import bioc.BioCDocument;
 import biomed.ner.structure.AnnotatedDataPoint;
+import biomed.ner.structure.AnnotatedStringDataPoint;
+import biomed.ner.structure.AtomStringLabel;
 import gov.nih.nlm.nls.metamap.document.NCBICorpusDocument;
+import gov.nih.nlm.nls.metamap.lite.resultformats.Brat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,10 +76,10 @@ public class MetaMapLiteModel implements iModel {
     }
 
     @Override
-    public AnnotatedDataPoint annotateText(String id,String text) {
+    public AnnotatedStringDataPoint annotateText(String id,String text) {
         
         //Create empty result set to be filled with suggested labels of Meta Map Lite
-        AnnotatedDataPoint result = new AnnotatedDataPoint(id, new ArrayList<>());
+        AnnotatedStringDataPoint result = new AnnotatedStringDataPoint(id);
         
         // Each document must be instantiated as a BioC document before processing
         
@@ -91,22 +94,57 @@ public class MetaMapLiteModel implements iModel {
         try {
             entityList = m_metaMapLiteInst.processDocument(document);
            
+             Brat bratFormattere = new Brat();
             
               // Add each found CUI to result
         
             for (Entity entity: entityList) 
             {
-              String cmpS = entity.getEvList().get(0).getConceptString();
+              String cmpS = bratFormattere.entityListFormatToString(Collections.singletonList(entity)).split(System.lineSeparator())[0].split("\t")[2];
               int start = entity.getFieldId().equals("title") ? entity.getOffset() : document.getPassage(0).getText().length()+ entity.getOffset()+1;
               int end = entity.getFieldId().equals("title") ? entity.getOffset()+entity.getLength() : document.getPassage(0).getText().length()+ entity.getOffset()+entity.getLength()+1;
-                System.out.println(start);
-                System.out.println(end);
+              AtomStringLabel asl = new AtomStringLabel(cmpS, start, end);
+              result.addConcept(asl);
+                
+            }
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+ 
+        return result;
+      
+    }
+
+    @Override
+    public AnnotatedDataPoint annotateTextCUI(String id, String text) {
+    
+        //Create empty result set to be filled with suggested labels of Meta Map Lite
+        AnnotatedDataPoint result = new AnnotatedDataPoint(id, new ArrayList<>());
+        
+        // Each document must be instantiated as a BioC document before processing
+        
+        BioCDocument document = NCBICorpusDocument.instantiateBioCDocument(text);
+        
+        
+        
+        // Proccess the document with Metamap
+        
+        List<Entity> entityList;
+        try {
+            entityList = m_metaMapLiteInst.processDocument(document);
+           
+            
+              // Add each found CUI to result
+        
+            for (Entity entity: entityList) 
+            {
                 for (Ev ev: entity.getEvSet()) 
                 {
-                    if(!cmpS.equals(ev.getConceptString())){
-                        
-                    System.out.println(cmpS+" "+ev.getConceptString());
-                    }
                     // Add new output CUI
                     result.addAnnotatedCUI(ev.getConceptInfo().getCUI());
 
@@ -122,7 +160,7 @@ public class MetaMapLiteModel implements iModel {
         
  
         return result;
-      
+    
     }
     
     

@@ -23,6 +23,8 @@ package biomed.ner.evaluation;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
+import biomed.ner.structure.AnnotatedStringDataPoint;
+import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,7 +78,7 @@ public class Experiment {
             //Get document
             String value = entry.getValue();
             //Compare result of Meta Map Lite on document to annotated Dataset
-            List<Set<String>> comparisons = this.compare(this.dataset.getLabelData().getDataPoint(key),this.model.annotateText(key, value));
+            List<Set<AtomStringLabel>> comparisons = this.compare(this.dataset.getLabelData().getDataPoint(key),this.model.annotateText(key, value));
             //Update counts
             totalNumRelevant += this.getNumRelevant(comparisons);
             totalNumRetrieved += this.getNumRetrieved(comparisons);
@@ -99,7 +101,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both 
      * @return #only in ground truth + # in both
      */
-    private int getNumRelevant(List<Set<String>> comparisons){
+    private int getNumRelevant(List<Set<AtomStringLabel>> comparisons){
         return comparisons.get(0).size() + comparisons.get(2).size();
     }
     
@@ -109,7 +111,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both
      * @return #only in model output + # in both
      */
-    private int getNumRetrieved(List<Set<String>> comparisons){
+    private int getNumRetrieved(List<Set<AtomStringLabel>> comparisons){
         return comparisons.get(1).size() + comparisons.get(2).size();
     }
     
@@ -119,7 +121,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both
      * @return # in both
      */
-    private int getNumIntersection(List<Set<String>> comparisons){
+    private int getNumIntersection(List<Set<AtomStringLabel>> comparisons){
         return comparisons.get(2).size();
     }
     
@@ -174,17 +176,17 @@ public class Experiment {
      * @param modelOut
      * @return 3 sets namely: {cuis only in labelset}, {cuis only in outputset}, {cuis occuring in both sets}
      */
-    private List<Set<String>> compare(AnnotatedDataPoint labels, AnnotatedDataPoint modelOut){
+    private List<Set<AtomStringLabel>> compare(AnnotatedStringDataPoint labels, AnnotatedStringDataPoint modelOut){
         
         //Convert list to set to remove duplicates
-        Set<String> labelSet = new HashSet(labels.getAnnotatedCUIs());
-        Set<String> outSet = new HashSet(modelOut.getAnnotatedCUIs());
+        Set<AtomStringLabel> labelSet = labels.getAnnotatedConcepts();
+        Set<AtomStringLabel> outSet = modelOut.getAnnotatedConcepts();
         
         //Need copy since remove operation is inplace and does not return modified version
-        Set<String> labelCopy = new HashSet(labelSet);
+        Set<AtomStringLabel> labelCopy = new HashSet(labelSet);
         
         //CreateIntersection
-        Set<String> intersection = new HashSet(labelSet);
+        Set<AtomStringLabel> intersection = new HashSet(labelSet);
         intersection.retainAll(outSet);
         
         //CreateDiff Labels/Out 
@@ -196,7 +198,7 @@ public class Experiment {
         outSet.removeAll(labelCopy);
         
         //Save 3 comparison sets in a list
-        List<Set<String>> setComparisons = new ArrayList();
+        List<Set<AtomStringLabel>> setComparisons = new ArrayList();
         setComparisons.add(labelSet);
         setComparisons.add(outSet);
         setComparisons.add(intersection);

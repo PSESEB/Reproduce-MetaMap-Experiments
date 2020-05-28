@@ -35,7 +35,7 @@ public class AnnotatedData {
      * Keys are ids also used for corresponding text
      * Values are is the annotatedDatapoint for a specific text.
      */
-    private Map<String,AnnotatedDataPoint> datapoints;
+    private Map<String,AnnotatedStringDataPoint> datapoints;
 
     public AnnotatedData(){
         this.datapoints = new HashMap<>();
@@ -45,29 +45,30 @@ public class AnnotatedData {
      * Adds Datapoint to dataset
      * @param adp 
      */
-    public void addDatapoint(AnnotatedDataPoint adp){
+    public void addDatapoint(AnnotatedStringDataPoint adp){
         
-        AnnotatedDataPoint existingAdp = this.datapoints.get(adp.getIdentifier());
+        AnnotatedStringDataPoint existingAdp = this.datapoints.get(adp.getIdentifier());
         if(existingAdp == null){
             this.datapoints.put(adp.getIdentifier(), adp);
         }else{
-            for(String cui : adp.getAnnotatedCUIs()){
-                existingAdp.addAnnotatedCUI(cui);
-            }
+            System.out.println("Size before: "+existingAdp.getAnnotatedConcepts().size());
+            existingAdp.getAnnotatedConcepts().addAll(adp.getAnnotatedConcepts());
+            System.out.println("Size after: "+existingAdp.getAnnotatedConcepts().size());
+            
             this.datapoints.put(existingAdp.getIdentifier(),existingAdp);
         }
     }
     /**
      * Creates datapoint and adds it to dataset
      * @param identifier
-     * @param cui 
+     * @param asl
      */
-    public void addDatapoint(String identifier, String cui){
-        AnnotatedDataPoint existingAdp = this.datapoints.get(identifier);
+    public void addDatapoint(String identifier, AtomStringLabel asl){
+        AnnotatedStringDataPoint existingAdp = this.datapoints.get(identifier);
           if(existingAdp == null){
-            this.datapoints.put(identifier, new AnnotatedDataPoint(identifier, cui));
+            this.datapoints.put(identifier, new AnnotatedStringDataPoint(identifier, asl));
         }else{
-            existingAdp.addAnnotatedCUI(cui);
+            existingAdp.addConcept(asl);
             this.datapoints.put(existingAdp.getIdentifier(),existingAdp);
         }
          
@@ -76,7 +77,7 @@ public class AnnotatedData {
      * Gives all datapoints
      * @return all datapoints
      */
-    public Map<String,AnnotatedDataPoint> getAllDatapoints(){
+    public Map<String,AnnotatedStringDataPoint> getAllDatapoints(){
         return this.datapoints;
     }
     
@@ -85,7 +86,7 @@ public class AnnotatedData {
      * @param identifier
      * @return AnnotatedDataPoint
      */
-    public AnnotatedDataPoint getDataPoint(String identifier){
+    public AnnotatedStringDataPoint getDataPoint(String identifier){
         return this.datapoints.get(identifier);
         
     }
