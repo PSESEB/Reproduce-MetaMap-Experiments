@@ -21,6 +21,7 @@
 package biomed.ner.evaluation;
 
 import biomed.ner.datasets.iDatasetReader;
+import biomed.ner.datasets.impl.CustomNCBIReader;
 import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.models.iModel;
 import biomed.ner.models.impl.MetaMapLiteModel;
@@ -50,6 +51,16 @@ public class ExperimentFactory {
                 ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
                 ncbi.parseDataset();
                 exp.setDataset(ncbi);
+                //Semantic Groups for NCBI
+                semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
+                break;
+            case "CustomNCBI":
+                //Create NCBI Reader
+                iDatasetReader ncbiCust = new CustomNCBIReader();
+                //Only works for trainset since they only annotated the train set again and not the other ones.
+                ncbiCust.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
+                ncbiCust.parseDataset();
+                exp.setDataset(ncbiCust);
                 //Semantic Groups for NCBI
                 semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
                 break;

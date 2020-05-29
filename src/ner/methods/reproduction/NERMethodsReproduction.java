@@ -22,13 +22,7 @@ package ner.methods.reproduction;
 
 import biomed.ner.evaluation.Experiment;
 import biomed.ner.evaluation.ExperimentFactory;
-import biomed.ner.structure.AnnotatedDataPoint;
-import biomed.ner.structure.AnnotatedStringDataPoint;
-import biomed.ner.structure.AtomStringLabel;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicStampedReference;
-import gov.nih.nlm.nls.metamap.lite.resultformats.Brat;
+
 
 
 
@@ -45,12 +39,11 @@ public class NERMethodsReproduction {
     public static void main(String[] args) {
         
        
-    Experiment ncbiMML = ExperimentFactory.getExperiment("NCBI", "MML");
+    Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
     ncbiMML.runExperiment();
 
-        
-     
-    
+//    AnnotatedStringDataPoint abc =  ncbiMML.getModel().annotateText("heppa", "123\tasdf\tAspartylglucosaminuria (AGU) is a recessive autosomally inherited lysosomal storage disorder due to deficiency of the enzyme aspartylglucosaminidase (AGA). The structural gene for this human enzyme (AGA) has been assigned to the region 4q21----qter. We determined the AGA activity in cultured fibroblasts of a girl with a 46, XX, del (4) (q33) karyotype. The results indicate that the girl is a hemizygote for AGA, permitting the assignment of human AGA to the region 4q33----qter.. ");
+//        System.out.println(abc.getAnnotatedConcepts().toString());
     }
     
    
