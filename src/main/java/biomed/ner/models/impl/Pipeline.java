@@ -18,26 +18,16 @@
  */
 package biomed.ner.models.impl;
 
-import java.io.FileNotFoundException;
-import opennlp.tools.sentdetect.SentenceModel;
-
 import org.apache.ctakes.clinicalpipeline.ClinicalPipelineFactory;
-import org.apache.ctakes.core.resource.FileLocator;
-import org.apache.ctakes.core.resource.FileResourceImpl;
-import org.apache.ctakes.dictionary.lookup2.ae.AbstractJCasTermAnnotator;
-import org.apache.ctakes.dictionary.lookup2.ae.DefaultJCasTermAnnotator;
-import org.apache.ctakes.dictionary.lookup2.ae.JCasTermAnnotator;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.resource.ResourceInitializationException;
+
 
 
 public class Pipeline {	
 
 	public static AggregateBuilder getAggregateBuilder() throws Exception {
 		AggregateBuilder builder = new AggregateBuilder();
-		//builder.add(ClinicalPipelineFactory.getFastPipeline());
 	      builder.add( ClinicalPipelineFactory.getTokenProcessingPipeline() );
 	      builder.add( AnalysisEngineFactory.createEngineDescription("src/main/resources/desc/ctakes-clinical-pipeline/desc/analysis_engine/AggregatePlaintextUMLSProcessor"));
 	        

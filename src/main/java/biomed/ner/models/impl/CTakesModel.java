@@ -23,20 +23,15 @@ package biomed.ner.models.impl;
 import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
 import biomed.ner.structure.AnnotatedStringDataPoint;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.ctakes.core.pipeline.PipelineBuilder;
-import org.apache.ctakes.core.pipeline.PiperFileReader;
-import org.apache.uima.fit.util.JCasUtil;
 import org.apache.ctakes.drugner.type.*;
 import org.apache.ctakes.typesystem.type.textsem.*;
-import org.apache.uima.UIMAException;
-import org.apache.uima.UIMAFramework;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.util.JCasPool;
@@ -49,45 +44,32 @@ import org.apache.uima.util.JCasPool;
 public class CTakesModel implements iModel{
     
      List<Class<? extends Annotation>> semClasses = new ArrayList<>();
-     private AnalysisEngine anaEngine;
      private JCasPool jPool;
+     private AggregateBuilder aggregateBuilder;
+     private AnalysisEngine pipeline;
     
-    public CTakesModel(String pathPiper){
+    public CTakesModel(){
         
-        
-        
+       
          try {
-             PiperFileReader reader = new PiperFileReader(pathPiper);
-             PipelineBuilder builder = reader.getBuilder();
-             AnalysisEngineDescription pipeline = builder.getAnalysisEngineDesc();
-             this.anaEngine = UIMAFramework.produceAnalysisEngine(pipeline);
-            
-             this.jPool = new JCasPool(3, this.anaEngine);
-              } catch (UIMAException | IOException ex) {
+            aggregateBuilder = Pipeline.getAggregateBuilder();
+            pipeline = aggregateBuilder.createAggregate();
+         } catch (Exception ex) {
              Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
-             
          }
-             // CUI types:
+         
+          // CUI types:
              semClasses.add(DiseaseDisorderMention.class);
              semClasses.add(SignSymptomMention.class);
              semClasses.add(ProcedureMention.class);
              semClasses.add(AnatomicalSiteMention.class);
              semClasses.add(MedicationMention.class);
+             semClasses.add(EntityMention.class);
              
-             // Temporal types:
-             semClasses.add(TimeMention.class);
-             semClasses.add(DateAnnotation.class);
-             
-             // Drug-related types:
-             semClasses.add(FractionStrengthAnnotation.class);
-             semClasses.add(DrugChangeStatusAnnotation.class);
-             semClasses.add(StrengthUnitAnnotation.class);
-             semClasses.add(StrengthAnnotation.class);
-             semClasses.add(RouteAnnotation.class);
-             semClasses.add(FrequencyUnitAnnotation.class);
-             semClasses.add(MeasurementAnnotation.class);
-     
     }
+         
+     
+
     
      public Map<String, List<Response>> parse(JCas jcas) throws Exception {
 
@@ -107,11 +89,12 @@ public class CTakesModel implements iModel{
     public AnnotatedStringDataPoint annotateText(String id, String text) {
          Map<String, List<Response>> resultMap;
         try {
-             JCas jcas = this.jPool.getJCas(-1);
-             jcas.setDocumentText(text);
-             this.anaEngine.process(jcas);
-            resultMap = this.parse(jcas);
-             this.jPool.releaseJCas(jcas);
+            JCas jcas = pipeline.newJCas();
+	    jcas.setDocumentText(text);
+            pipeline.process(jcas);
+            resultMap = parse(jcas);
+            jcas.reset();
+             
              
           for (Map.Entry<String, List<Response>> entry : resultMap.entrySet()) {
              String key = entry.getKey();

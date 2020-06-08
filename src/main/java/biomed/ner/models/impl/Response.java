@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.uima.cas.Feature;
+import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.jcas.cas.FSArray;
 
 
 public class Response {
@@ -43,22 +46,60 @@ public class Response {
         begin = annotation.getBegin();
         end = annotation.getEnd();
         text = annotation.getCoveredText();
+        
+        this.extractFeatures((FeatureStructure) annotation);
+        
+
 
         if(annotation instanceof IdentifiedAnnotation) {
             IdentifiedAnnotation ia = (IdentifiedAnnotation) annotation;
+            
             polarity = ia.getPolarity();
             if(ia.getOntologyConceptArr() != null) {
                 for (UmlsConcept concept : JCasUtil.select(ia.getOntologyConceptArr(), UmlsConcept.class)) {
                     Map<String, String> atts = new HashMap<>();
                     atts.put("codingScheme", concept.getCodingScheme());
                     atts.put("cui", concept.getCui());
-                    atts.put("code", concept.getCode());
-                    atts.put("tui", concept.getTui());
+                    atts.put("prefText", concept.getPreferredText());
+                    
                     conceptAttributes.add(atts);
                 }
             }
         }
     }
+    
+    
+    private void extractFeatures(FeatureStructure fs){
+        List<?> plist = fs.getType().getFeatures();
+        for (Object obj : plist) {
+			if (obj instanceof Feature) {
+				Feature feature = (Feature) obj;
+				String val = "";
+				if (feature.getRange().isPrimitive()) {
+					val = fs.getFeatureValueAsString(feature);
+				} else if (feature.getRange().isArray()) {
+					// Flatten the Arrays
+					FeatureStructure featval = fs.getFeatureValue(feature);
+					if (featval instanceof FSArray) {
+						FSArray valarray = (FSArray) featval;
+						for (int i = 0; i < valarray.size(); ++i) {
+							FeatureStructure temp = valarray.get(i);
+							extractFeatures(temp);
+						}
+					}
+				}
+				if (feature.getName() != null
+						&& val != null
+						&& val.trim().length() > 0
+						&& !"confidence".equalsIgnoreCase(feature
+								.getShortName())) {
+                                    System.out.println("FEATURE: "+feature.getShortName()+"|"+val);
+					
+				}
+			}
+		}
+    }
+    
     
     @Override
     public String toString(){
