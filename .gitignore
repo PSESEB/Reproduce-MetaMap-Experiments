@@ -1,2 +1,3 @@
-build/
-dist/
+target/
+local-maven-repo/gov/nih/nlm/mmlite/3.6.2/mmlite-3.6.2.jar
+/src/main/resources/
