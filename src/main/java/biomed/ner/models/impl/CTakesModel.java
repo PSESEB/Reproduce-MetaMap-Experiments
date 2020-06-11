@@ -23,10 +23,10 @@ package biomed.ner.models.impl;
 import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
 import biomed.ner.structure.AnnotatedStringDataPoint;
+import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.ctakes.drugner.type.*;
 import org.apache.ctakes.typesystem.type.textsem.*;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -34,7 +34,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
-import org.apache.uima.util.JCasPool;
 
 
 /**
@@ -44,7 +43,6 @@ import org.apache.uima.util.JCasPool;
 public class CTakesModel implements iModel{
     
      List<Class<? extends Annotation>> semClasses = new ArrayList<>();
-     private JCasPool jPool;
      private AggregateBuilder aggregateBuilder;
      private AnalysisEngine pipeline;
     
@@ -87,27 +85,42 @@ public class CTakesModel implements iModel{
 
     @Override
     public AnnotatedStringDataPoint annotateText(String id, String text) {
+        
+         //Create empty result set to be filled with suggested labels of Meta Map Lite
+        AnnotatedStringDataPoint result = new AnnotatedStringDataPoint(id);
+        
+        //Parse NCBI tab seperated text to one single text
+        String[] ncbiSplit = text.split("\t");
+        //Usually looks like id\tTitle\tAbstract -> We only need title and abstract
+        String fullText = ncbiSplit[1]+" "+ncbiSplit[2];
+        
+        //Create Map to store output of cTakes
          Map<String, List<Response>> resultMap;
         try {
+            //Create cTakes Pipeline
             JCas jcas = pipeline.newJCas();
-	    jcas.setDocumentText(text);
+            //Load text to pipeline
+	    jcas.setDocumentText(fullText);
+            //Process document
             pipeline.process(jcas);
+            //Parse the results
             resultMap = parse(jcas);
             jcas.reset();
              
-             
-          for (Map.Entry<String, List<Response>> entry : resultMap.entrySet()) {
-             String key = entry.getKey();
-            List<Response> value = entry.getValue();
-              System.out.println(key+" : "+value.toString());
-          }
+         //Get relevant 
+         List<Response> found  = resultMap.get("DiseaseDisorderMention");
+         for(Response r : found){
+             AtomStringLabel asl = new AtomStringLabel(r.getText(), r.getBegin(), r.getEnd());
+             result.addConcept(asl);
+         }
+         
          } catch (AnalysisEngineProcessException ex) {
              Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
          } catch (Exception ex) {
              Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
          }
 
-         return new AnnotatedStringDataPoint("1");
+         return result;
     }
 
     @Override

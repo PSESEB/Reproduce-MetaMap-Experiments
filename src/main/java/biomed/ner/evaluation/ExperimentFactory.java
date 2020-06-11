@@ -24,6 +24,7 @@ import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.datasets.impl.CustomNCBIReader;
 import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.models.iModel;
+import biomed.ner.models.impl.CTakesModel;
 import biomed.ner.models.impl.MetaMapLiteModel;
 
 /**
@@ -74,6 +75,13 @@ public class ExperimentFactory {
                 //instantiate new Meta Map Lite Model
                 iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite",semanticGroup);
                 exp.setModel(metaMapLite);
+                break;
+                
+            case "cTakes":
+            case "ctakes":
+                //instantiate new cTakes Model
+                iModel cTakes = new CTakesModel();
+                exp.setModel(cTakes);
                 break;
             default:
                 System.out.println("Model not found! No model was loaded.");

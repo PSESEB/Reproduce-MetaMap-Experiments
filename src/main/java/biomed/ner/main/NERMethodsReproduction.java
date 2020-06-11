@@ -53,17 +53,13 @@ public class NERMethodsReproduction {
      */
     public static void main(String[] args){
         
-   
-        
-       
-        CTakesModel ctm = new CTakesModel();
-        ctm.annotateText("heppa", "123\tasdf\tAspartylglucosaminuria (AGU) is a recessive autosomally inherited lysosomal storage disorder due to deficiency of the enzyme aspartylglucosaminidase (AGA). The structural gene for this human enzyme (AGA) has been assigned to the region 4q21----qter. We determined the AGA activity in cultured fibroblasts of a girl with a 46, XX, del (4) (q33) karyotype. The results indicate that the girl is a hemizygote for AGA, permitting the assignment of human AGA to the region 4q33----qter.. ");
-
             Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
            // ncbiMML.runExperiment();
+           
+           Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
+           ncbiCTakes.runExperiment();
             
-    AnnotatedStringDataPoint abc =  ncbiMML.getModel().annotateText("heppa", "123\tasdf\tAspartylglucosaminuria (AGU) is a recessive autosomally inherited lysosomal storage disorder due to deficiency of the enzyme aspartylglucosaminidase (AGA). The structural gene for this human enzyme (AGA) has been assigned to the region 4q21----qter. We determined the AGA activity in cultured fibroblasts of a girl with a 46, XX, del (4) (q33) karyotype. The results indicate that the girl is a hemizygote for AGA, permitting the assignment of human AGA to the region 4q33----qter.. ");
-        System.out.println(abc.getAnnotatedConcepts().toString());
+  
       
     }
     

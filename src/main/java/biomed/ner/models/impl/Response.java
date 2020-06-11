@@ -25,16 +25,17 @@ import org.apache.ctakes.typesystem.type.refsem.UmlsConcept;
 import org.apache.ctakes.typesystem.type.textsem.IdentifiedAnnotation;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.tcas.Annotation;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
-import org.apache.uima.jcas.cas.FSArray;
 
 
+/**
+ * Parses cTakes Annotation response
+ * Extract essential information for labeling
+ * @author Sebastian Hennig
+ */
 public class Response {
     public int begin;
     public int end;
@@ -42,62 +43,64 @@ public class Response {
     public int polarity;
     public List<Map<String,String>> conceptAttributes = new ArrayList<>();
 
+    public int getBegin() {
+        return begin;
+    }
+
+    public void setBegin(int begin) {
+        this.begin = begin;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    /**
+     * Analyze annotations and extract valuable information
+     * @param annotation 
+     */
     public Response(Annotation annotation){
+        //Extract the start of label
         begin = annotation.getBegin();
+        //Extract the end of the label
         end = annotation.getEnd();
+        //Extract the text thas was found
         text = annotation.getCoveredText();
         
-        this.extractFeatures((FeatureStructure) annotation);
-        
-
 
         if(annotation instanceof IdentifiedAnnotation) {
             IdentifiedAnnotation ia = (IdentifiedAnnotation) annotation;
-            
+            //Extract Polarity for polarity tests
             polarity = ia.getPolarity();
             if(ia.getOntologyConceptArr() != null) {
+                //Extract all umls Concepts found for annotation
                 for (UmlsConcept concept : JCasUtil.select(ia.getOntologyConceptArr(), UmlsConcept.class)) {
+                    //Save each found match for UMLS concept
                     Map<String, String> atts = new HashMap<>();
                     atts.put("codingScheme", concept.getCodingScheme());
                     atts.put("cui", concept.getCui());
                     atts.put("prefText", concept.getPreferredText());
+                    if(concept.getPreferredText() != null){
+                        //Uncomment this line to use preferred text instead of captions found in the original text.
+                        //this.text = concept.getPreferredText();
+                    }
                     
                     conceptAttributes.add(atts);
                 }
             }
         }
-    }
-    
-    
-    private void extractFeatures(FeatureStructure fs){
-        List<?> plist = fs.getType().getFeatures();
-        for (Object obj : plist) {
-			if (obj instanceof Feature) {
-				Feature feature = (Feature) obj;
-				String val = "";
-				if (feature.getRange().isPrimitive()) {
-					val = fs.getFeatureValueAsString(feature);
-				} else if (feature.getRange().isArray()) {
-					// Flatten the Arrays
-					FeatureStructure featval = fs.getFeatureValue(feature);
-					if (featval instanceof FSArray) {
-						FSArray valarray = (FSArray) featval;
-						for (int i = 0; i < valarray.size(); ++i) {
-							FeatureStructure temp = valarray.get(i);
-							extractFeatures(temp);
-						}
-					}
-				}
-				if (feature.getName() != null
-						&& val != null
-						&& val.trim().length() > 0
-						&& !"confidence".equalsIgnoreCase(feature
-								.getShortName())) {
-                                    System.out.println("FEATURE: "+feature.getShortName()+"|"+val);
-					
-				}
-			}
-		}
     }
     
     

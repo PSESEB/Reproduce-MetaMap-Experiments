@@ -19,24 +19,33 @@
 package biomed.ner.models.impl;
 
 import org.apache.ctakes.clinicalpipeline.ClinicalPipelineFactory;
+import org.apache.ctakes.dictionary.lookup2.ae.*;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 
 
-
+/**
+ * Creates cTakes Pipeline
+ * 
+ */
 public class Pipeline {	
-
+        
+        /**
+         * Build cTakes processing pipeline
+         * @return Pipeline
+         * @throws Exception 
+         */
 	public static AggregateBuilder getAggregateBuilder() throws Exception {
 		AggregateBuilder builder = new AggregateBuilder();
 	      builder.add( ClinicalPipelineFactory.getTokenProcessingPipeline() );
-	      builder.add( AnalysisEngineFactory.createEngineDescription("src/main/resources/desc/ctakes-clinical-pipeline/desc/analysis_engine/AggregatePlaintextUMLSProcessor"));
+	     // builder.add( AnalysisEngineFactory.createEngineDescription("src/main/resources/desc/ctakes-clinical-pipeline/desc/analysis_engine/AggregatePlaintextUMLSProcessor"));
 	        
-//	      builder.add( PolarityCleartkAnalysisEngine.createAnnotatorDescription() );
-//	      builder.add( UncertaintyCleartkAnalysisEngine.createAnnotatorDescription() );
-//	      builder.add( HistoryCleartkAnalysisEngine.createAnnotatorDescription() );
-//	      builder.add( ConditionalCleartkAnalysisEngine.createAnnotatorDescription() );
-//	      builder.add( GenericCleartkAnalysisEngine.createAnnotatorDescription() );
-//	      builder.add( SubjectCleartkAnalysisEngine.createAnnotatorDescription() );		
+                builder.add( AnalysisEngineFactory.createEngineDescription( DefaultJCasTermAnnotator.class,
+	               AbstractJCasTermAnnotator.PARAM_WINDOW_ANNOT_KEY,
+	               "org.apache.ctakes.typesystem.type.textspan.Sentence",
+	               JCasTermAnnotator.DICTIONARY_DESCRIPTOR_KEY,
+	               "org/apache/ctakes/dictionary/lookup/fast/sno_rx_16ab.xml" )
+	         );	
 		return builder;
 	}
 

@@ -86,8 +86,6 @@ public class MetaMapLiteModel implements iModel {
         BioCDocument document = NCBICorpusDocument.instantiateBioCDocument(text);
         
         
-        
-        
         // Proccess the document with Metamap
         
         List<Entity> entityList;
