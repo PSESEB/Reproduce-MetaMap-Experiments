@@ -41,7 +41,7 @@ public class NERMethodsReproduction {
             Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
            // ncbiMML.runExperiment();
            
-           Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
+          // Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
           // ncbiCTakes.runExperiment();
             
   

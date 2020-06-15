@@ -284,7 +284,11 @@
                     <groupId>gov.nih.nlm</groupId>
                     <artifactId>metamap</artifactId>
                     <version>2.0</version>
-                   
+                </dependency>
+                    <dependency>
+                    <groupId>se.sics</groupId>
+                    <artifactId>prologbeans</artifactId>
+                    <version>1.0</version>
                 </dependency>
     </dependencies>
     <build>
