@@ -22,6 +22,8 @@ package biomed.ner.main;
 
 import biomed.ner.evaluation.Experiment;
 import biomed.ner.evaluation.ExperimentFactory;
+import gov.nih.nlm.nls.metamap.MetaMapApi;
+import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
 
 
 /**
@@ -35,12 +37,12 @@ public class NERMethodsReproduction {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        
+        MetaMapApi api = new MetaMapApiImpl();
             Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
-            ncbiMML.runExperiment();
+           // ncbiMML.runExperiment();
            
            Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
-           ncbiCTakes.runExperiment();
+          // ncbiCTakes.runExperiment();
             
   
       
