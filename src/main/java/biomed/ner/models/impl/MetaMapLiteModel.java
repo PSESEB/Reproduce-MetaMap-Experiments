@@ -98,9 +98,13 @@ public class MetaMapLiteModel implements iModel {
         
             for (Entity entity: entityList) 
             {
+              //Get concept String
               String cmpS = bratFormattere.entityListFormatToString(Collections.singletonList(entity)).split(System.lineSeparator())[0].split("\t")[2];
+              //Get Start Offset
               int start = entity.getFieldId().equals("title") ? entity.getOffset() : document.getPassage(0).getText().length()+ entity.getOffset()+1;
+              //Get End Offset
               int end = entity.getFieldId().equals("title") ? entity.getOffset()+entity.getLength() : document.getPassage(0).getText().length()+ entity.getOffset()+entity.getLength()+1;
+              //Create Label 
               AtomStringLabel asl = new AtomStringLabel(cmpS, start, end);
               result.addConcept(asl);
                 

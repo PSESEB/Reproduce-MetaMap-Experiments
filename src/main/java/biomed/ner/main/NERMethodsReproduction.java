@@ -22,23 +22,6 @@ package biomed.ner.main;
 
 import biomed.ner.evaluation.Experiment;
 import biomed.ner.evaluation.ExperimentFactory;
-import biomed.ner.models.impl.CTakesModel;
-import biomed.ner.models.impl.Pipeline;
-import biomed.ner.structure.AnnotatedStringDataPoint;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import opennlp.tools.ml.model.MaxentModel;
-import opennlp.tools.sentdetect.*;
-import org.apache.ctakes.core.resource.FileLocator;
-import org.apache.ctakes.core.sentence.EndOfSentenceScannerImpl;
-import org.apache.ctakes.core.sentence.SentenceDetectorCtakes;
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.fit.factory.AggregateBuilder;
-
-
 
 
 /**
@@ -54,7 +37,7 @@ public class NERMethodsReproduction {
     public static void main(String[] args){
         
             Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
-           // ncbiMML.runExperiment();
+            ncbiMML.runExperiment();
            
            Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
            ncbiCTakes.runExperiment();

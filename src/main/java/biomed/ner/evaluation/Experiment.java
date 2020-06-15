@@ -22,7 +22,6 @@ package biomed.ner.evaluation;
 
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.models.iModel;
-import biomed.ner.structure.AnnotatedDataPoint;
 import biomed.ner.structure.AnnotatedStringDataPoint;
 import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
@@ -37,7 +36,13 @@ import java.util.logging.Logger;
  */
 public class Experiment {
     
+    /**
+     * Dataset for Experiment
+     */
     private iDatasetReader dataset;
+    /**
+     * Model for Experiment
+     */
     private iModel model;
 
     public iDatasetReader getDataset() {
@@ -188,6 +193,7 @@ public class Experiment {
         //CreateIntersection
         Set<AtomStringLabel> intersection = new HashSet(labelSet);
         intersection.retainAll(outSet);
+        
         
         //CreateDiff Labels/Out 
         //Filter for elements that only exist in labelSet

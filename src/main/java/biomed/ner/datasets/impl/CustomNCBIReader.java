@@ -37,21 +37,43 @@ import java.util.logging.Logger;
 
 
 /**
- * Reads and parses NCBI datasets to the internal structure needed
+ * Reads and parses LHC NCBI datasets to the internal structure needed
+ * The input is still loaded from the original NCBI dataset.
+ * But the Annotations are loaded from the .ann files provided by LHC
  * @author Sebastian Hennig
  */
 public class CustomNCBIReader implements iDatasetReader{
     
+    /**
+     * Temporary Storage of Input after file reading
+     */
     private ArrayList<String> inputData;
     
+    /**
+     * Storage of all labels
+     */
     private AnnotatedData labelData;
     
+    /**
+     * Temporary Storage of Labels before parsing to internal structure
+     */
     private Map<String,String> intermediateAnnotations;
     
+    /**
+     * Path do dataset
+     */
     private String datasetPath;
     
+    /**
+     * Parsed Input
+     */
     private Map<String,String> parsedInput;
     
+    
+    /**
+     * Entity Types that should be considered in the label Set
+     * Used to filter only relevant labels
+     */
     private String[] entityTypes;
     
     
@@ -59,7 +81,7 @@ public class CustomNCBIReader implements iDatasetReader{
     @Override
     public void loadDataset(String path, String file,String settings){
         
-        
+        //Build Path
         String full_path = path + file;
         this.datasetPath = path;
         String annotationPath = path +"lhc_annotations/";
@@ -73,6 +95,7 @@ public class CustomNCBIReader implements iDatasetReader{
         }
         this.entityTypes = entityType;
         
+        //Read Files and fill temporary storages
         try {
             br = new BufferedReader(new FileReader(full_path));
        
@@ -93,19 +116,23 @@ public class CustomNCBIReader implements iDatasetReader{
                     //if regex matches: add to input
                     this.inputData.add(line);
                 }else{
-                    //else add to labels
+                    //else load labels
                    if(line.split("\t").length > 1){
                         String identifier = line.split("\t")[0];
+                        //If labels not already loaded
                         if(this.intermediateAnnotations.get(identifier) == null){
+                            //Read LHC annotation file
                             BufferedReader bra = new BufferedReader(new FileReader(annotationPath+"PMID-"+identifier+".ann"));
                              StringBuilder sb = new StringBuilder();
                              String aline = bra.readLine();
+                             //Read Labels line by line
                              while(aline != null){
                                  sb.append(aline);
                                  sb.append(System.lineSeparator());
                                  aline = bra.readLine();
                              }
                              bra.close();
+                             //Add labels from file to intermediate storage
                              this.intermediateAnnotations.put(identifier,sb.toString());
                         }
                         

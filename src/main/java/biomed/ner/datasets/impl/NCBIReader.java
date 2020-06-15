@@ -24,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.structure.AnnotatedData;
-import biomed.ner.structure.AnnotatedDataPoint;
-import biomed.ner.structure.AnnotatedStringDataPoint;
 import biomed.ner.structure.AtomStringLabel;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -42,14 +40,29 @@ import java.util.logging.Logger;
  */
 public class NCBIReader implements iDatasetReader{
     
+    /**
+     * Temporary Storage for file input
+     */
     private ArrayList<String> inputData;
     
+    /**
+     * Parsed Labels
+     */
     private AnnotatedData labelData;
     
+    /**
+     * Temporary Storage for labels loaded from file
+     */
     private String intermediateAnnotations;
     
+    /**
+     * Path to dataset
+     */
     private String datasetPath;
     
+    /**
+     * Final parsed Input
+     */
     private Map<String,String> parsedInput;
     
     
@@ -57,7 +70,7 @@ public class NCBIReader implements iDatasetReader{
     @Override
     public void loadDataset(String path, String file,String settings){
         
-        
+        //Build Path
         String full_path = path + file;
         this.datasetPath = path;
         BufferedReader br;
@@ -69,6 +82,7 @@ public class NCBIReader implements iDatasetReader{
             entityTypes = settings.split(",");
         }
         
+        //Read Dataset File
         try {
             br = new BufferedReader(new FileReader(full_path));
        
@@ -97,8 +111,10 @@ public class NCBIReader implements iDatasetReader{
                         labelData.addDatapoint(split[0], asl);
                         //Parse Labels
                         String label = split[split.length -1];
+                        //Multi Label eg. C123|C456 or C123+C456
                         if(label.contains("|") || label.contains("+")){
                             String[] splitLabels = label.contains("|") ? label.split("\\|") : label.split("\\+");
+                            //Add all labels
                             for(String splitLabel : splitLabels){
                                 sb.append(split[0].trim());
                                 sb.append(" ");
@@ -106,7 +122,7 @@ public class NCBIReader implements iDatasetReader{
                                 sb.append(System.lineSeparator());
                             }
                         
-                        }else{
+                        }else{//Single Label
                             sb.append(split[0].trim());
                             sb.append(" ");
                             sb.append(split[split.length -1].trim());
@@ -117,6 +133,7 @@ public class NCBIReader implements iDatasetReader{
                 }
                 line = br.readLine();
             }
+            //Add labels to temporary storage
             this.intermediateAnnotations = sb.toString();
         } finally {
             br.close();
@@ -141,7 +158,7 @@ public class NCBIReader implements iDatasetReader{
         //NCBI tag as key CUI as value
         HashMap<String, Set<String>> cuiMapping = new HashMap<>();
         BufferedReader br;
-        //Define Mapping Files
+        //Define Mapping Files (see github readme on how to produce these)
         String[] mappingFiles = {"MHcui","OMIMcui","MHCcui"};
         for(String mappingFile : mappingFiles){
             try {

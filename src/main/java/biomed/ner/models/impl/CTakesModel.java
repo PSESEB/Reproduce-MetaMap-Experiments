@@ -50,7 +50,9 @@ public class CTakesModel implements iModel{
         
        
          try {
+             //Load configuration
             aggregateBuilder = Pipeline.getAggregateBuilder();
+            //Build actual Pipeline according to config
             pipeline = aggregateBuilder.createAggregate();
          } catch (Exception ex) {
              Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,13 +73,18 @@ public class CTakesModel implements iModel{
     
      public Map<String, List<Response>> parse(JCas jcas) throws Exception {
 
+        //Construct to save Results from parsing
         Map<String, List<Response>> responseMap = new HashMap<>();
+        //Iterate over relevant Annotation Types
         for(Class<? extends Annotation> semClass : semClasses){
             List<Response> annotations = new ArrayList<>();
+            //iterate over annotations
             for(Annotation annot : JCasUtil.select(jcas, semClass)){
+                //Create Response object
                 Response response = new Response(annot);
                 annotations.add(response);
             }
+            //Add annotations regarding to semantic type that they belong to
             responseMap.put(semClass.getSimpleName(), annotations);
         }
         return responseMap;
