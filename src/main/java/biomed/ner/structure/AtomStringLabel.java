@@ -65,7 +65,7 @@ public class AtomStringLabel {
 
         AtomStringLabel other_ = (AtomStringLabel) other;
 
-        return this.term.equals(other_.term) && this.startOffset == other_.startOffset && this.endOffset == other_.endOffset;
+        return this.term.equalsIgnoreCase(other_.term) && this.startOffset == other_.startOffset && this.endOffset == other_.endOffset;
     }
 
     @Override

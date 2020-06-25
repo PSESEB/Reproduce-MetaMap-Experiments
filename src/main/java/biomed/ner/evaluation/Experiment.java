@@ -187,6 +187,8 @@ public class Experiment {
         Set<AtomStringLabel> labelSet = labels.getAnnotatedConcepts();
         Set<AtomStringLabel> outSet = modelOut.getAnnotatedConcepts();
         
+    
+        
         //Need copy since remove operation is inplace and does not return modified version
         Set<AtomStringLabel> labelCopy = new HashSet(labelSet);
         

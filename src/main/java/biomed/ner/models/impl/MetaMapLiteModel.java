@@ -36,6 +36,7 @@ import gov.nih.nlm.nls.metamap.document.NCBICorpusDocument;
 import gov.nih.nlm.nls.metamap.lite.resultformats.Brat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import gov.nih.nlm.nls.metamap.document.FreeText;
 
 
 /**
@@ -52,7 +53,7 @@ public class MetaMapLiteModel implements iModel {
      * @param mml_folder 
      * @param semanticGroups 
      */
-    public MetaMapLiteModel(String mml_folder, String semanticGroups){
+    public MetaMapLiteModel(String mml_folder, String semanticGroups, boolean linesFlag){
           // Initialization Section
         
         Properties myProperties = new Properties();
@@ -68,6 +69,12 @@ public class MetaMapLiteModel implements iModel {
         
         //Add fitting semantic groups
         myProperties.setProperty("metamaplite.semanticgroup", semanticGroups);
+       
+        if(linesFlag){
+            myProperties.setProperty("metamaplite.segmentation.method", "LINES");
+            
+        }
+        
         try {
             m_metaMapLiteInst = new MetaMapLite(myProperties);
         } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException | IOException ex) {
@@ -83,7 +90,10 @@ public class MetaMapLiteModel implements iModel {
         
         // Each document must be instantiated as a BioC document before processing
         
+        
         BioCDocument document = NCBICorpusDocument.instantiateBioCDocument(text);
+       // BioCDocument document = FreeText.instantiateBioCDocument(text.split("\t")[2]);
+        
         
         
         // Proccess the document with Metamap
@@ -117,7 +127,6 @@ public class MetaMapLiteModel implements iModel {
             Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
- 
         return result;
       
     }
@@ -160,7 +169,7 @@ public class MetaMapLiteModel implements iModel {
             Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
- 
+        System.out.println(result.toString());
         return result;
     
     }

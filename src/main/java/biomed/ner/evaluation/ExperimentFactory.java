@@ -22,6 +22,7 @@ package biomed.ner.evaluation;
 
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.datasets.impl.CustomNCBIReader;
+import biomed.ner.datasets.impl.I2B22010Reader;
 import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.models.iModel;
 import biomed.ner.models.impl.CTakesModel;
@@ -44,7 +45,8 @@ public class ExperimentFactory {
     public static Experiment getExperiment(String dataset, String model){
         
         Experiment exp = new Experiment();
-        String semanticGroup = "";
+        String semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
+        boolean linesFlag = false;
         //First check which Dataset is choosen
         switch(dataset){
             case "NCBI":
@@ -53,8 +55,6 @@ public class ExperimentFactory {
                 ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
                 ncbi.parseDataset();
                 exp.setDataset(ncbi);
-                //Semantic Groups for NCBI
-                semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
                 break;
             case "CustomNCBI":
                 //Create NCBI Reader
@@ -63,8 +63,17 @@ public class ExperimentFactory {
                 ncbiCust.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
                 ncbiCust.parseDataset();
                 exp.setDataset(ncbiCust);
-                //Semantic Groups for NCBI
-                semanticGroup = "cgab,acab,inpo,patf,dsyn,anab,neop,mobd,sosy";
+                break;
+            case "i2b2 2010":
+            case "i2b22010":
+            case "2010 i2b2":
+                //Create i2b2 2010 reader
+                iDatasetReader i2b22010 = new I2B22010Reader();
+                //Only take problems as labels same as Meta Map Lite authors
+                i2b22010.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2010", "", "problem");
+                i2b22010.parseDataset();
+                exp.setDataset(i2b22010);
+                linesFlag = true;
                 break;
             default:
                 System.out.println("Datset Not Found! No dataset was loaded.");
@@ -74,7 +83,7 @@ public class ExperimentFactory {
             case "MetaMapLite":
             case "MML":
                 //instantiate new Meta Map Lite Model
-                iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite",semanticGroup);
+                iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite",semanticGroup,linesFlag);
                 exp.setModel(metaMapLite);
                 break;
                 

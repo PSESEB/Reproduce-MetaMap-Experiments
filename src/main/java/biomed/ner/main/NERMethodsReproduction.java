@@ -22,10 +22,10 @@ package biomed.ner.main;
 
 import biomed.ner.evaluation.Experiment;
 import biomed.ner.evaluation.ExperimentFactory;
-import biomed.ner.models.impl.MetaMapModel;
+import biomed.ner.models.iModel;
+import biomed.ner.models.impl.MetaMapLiteModel;
 import biomed.ner.structure.AnnotatedStringDataPoint;
-import gov.nih.nlm.nls.metamap.MetaMapApi;
-import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
+
 
 
 /**
@@ -40,14 +40,18 @@ public class NERMethodsReproduction {
      */
     public static void main(String[] args){
         
+            Experiment i2b2MML = ExperimentFactory.getExperiment("i2b2 2010", "MML");
+            i2b2MML.runExperiment();
+            
+            
 //            Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
            // ncbiMML.runExperiment();
            
           // Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "cTakes");
           // ncbiCTakes.runExperiment();
           
-           Experiment ncbiMM = ExperimentFactory.getExperiment("CustomNCBI", "MM");
-           ncbiMM.runExperiment();
+        //   Experiment ncbiMM = ExperimentFactory.getExperiment("CustomNCBI", "MM");
+          // ncbiMM.runExperiment();
             
   
       
