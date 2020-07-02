@@ -36,7 +36,6 @@ import gov.nih.nlm.nls.metamap.document.NCBICorpusDocument;
 import gov.nih.nlm.nls.metamap.lite.resultformats.Brat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import gov.nih.nlm.nls.metamap.document.FreeText;
 
 
 /**
@@ -83,7 +82,7 @@ public class MetaMapLiteModel implements iModel {
     }
 
     @Override
-    public AnnotatedStringDataPoint annotateText(String id,String text) {
+    public AnnotatedStringDataPoint annotateText(String id,String text, boolean cui) {
         
         //Create empty result set to be filled with suggested labels of Meta Map Lite
         AnnotatedStringDataPoint result = new AnnotatedStringDataPoint(id);
@@ -93,7 +92,6 @@ public class MetaMapLiteModel implements iModel {
         
         BioCDocument document = NCBICorpusDocument.instantiateBioCDocument(text);
        // BioCDocument document = FreeText.instantiateBioCDocument(text.split("\t")[2]);
-        
         
         
         // Proccess the document with Metamap
@@ -110,6 +108,10 @@ public class MetaMapLiteModel implements iModel {
             {
               //Get concept String
               String cmpS = bratFormattere.entityListFormatToString(Collections.singletonList(entity)).split(System.lineSeparator())[0].split("\t")[2];
+            
+              if(cui){
+                  cmpS = entity.getEvList().get(0).getConceptInfo().getCUI();
+              }
               //Get Start Offset
               int start = entity.getFieldId().equals("title") ? entity.getOffset() : document.getPassage(0).getText().length()+ entity.getOffset()+1;
               //Get End Offset
@@ -169,7 +171,6 @@ public class MetaMapLiteModel implements iModel {
             Logger.getLogger(MetaMapLiteModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        System.out.println(result.toString());
         return result;
     
     }

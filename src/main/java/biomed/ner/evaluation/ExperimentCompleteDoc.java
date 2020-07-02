@@ -20,9 +20,9 @@
  */
 package biomed.ner.evaluation;
 
-import biomed.ner.datasets.iDatasetReader;
+import biomed.ner.datasets.impl.I2B22008Reader;
 import biomed.ner.models.iModel;
-import biomed.ner.structure.AnnotatedStringDataPoint;
+import biomed.ner.structure.AnnotatedDataPoint;
 import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
 import java.util.logging.Level;
@@ -31,25 +31,25 @@ import java.util.logging.Logger;
 
 /**
  *
- * Creates an experiment with a specific dataset and model
+ * Creates an experiment according to rategui et al.
  * @author Sebastian Hennig
  */
-public class Experiment {
+public class ExperimentCompleteDoc {
     
     /**
      * Dataset for Experiment
      */
-    private iDatasetReader dataset;
+    private I2B22008Reader dataset;
     /**
      * Model for Experiment
      */
     private iModel model;
 
-    public iDatasetReader getDataset() {
+    public I2B22008Reader getDataset() {
         return dataset;
     }
 
-    public void setDataset(iDatasetReader dataset) {
+    public void setDataset(I2B22008Reader dataset) {
         this.dataset = dataset;
     }
 
@@ -64,39 +64,80 @@ public class Experiment {
     /**
      * Runs and evaluates Experiment
      */
-    public void runExperiment(){
+    public void runExperiment(boolean singleCUI){
         //check if dataset and model is set
         //Necessary to run experiment.
         assert this.dataset != null : "No datset loaded";
         assert this.model != null : "No model loaded";
         //Create counts for relevant, retrieved and contained in both
-        //Later used to calculate Precision and Recall
-        int totalNumRelevant = 0;
-        int totalNumRetrieved = 0;
-        int totalNumIntersection = 0;
+       
+        
+        Map<String,Set<String>> outs = new HashMap();
         
         //Iterate over Dataset
         for (Map.Entry<String, String> entry : this.dataset.getInputData().entrySet()) {
-            Logger.getLogger(Experiment.class.getName()).log(Level.INFO,"Processing Datapoint with ID "+entry.getKey());
+            Logger.getLogger(ExperimentCompleteDoc.class.getName()).log(Level.INFO,"Processing Datapoint with ID "+entry.getKey());
             //get id of document
             String key = entry.getKey();
             //Get document
             String value = entry.getValue();
             //Compare result of Meta Map Lite on document to annotated Dataset
-            List<Set<AtomStringLabel>> comparisons = this.compare(this.dataset.getLabelData().getDataPoint(key),this.model.annotateText(key, value,this.dataset.isCUIoutput()));
-            //Update counts
-            totalNumRelevant += this.getNumRelevant(comparisons);
-            totalNumRetrieved += this.getNumRetrieved(comparisons);
-            totalNumIntersection += this.getNumIntersection(comparisons);
-//            System.out.println("rel "+totalNumRelevant+" ret "+totalNumRetrieved+" int "+totalNumIntersection);
+            AnnotatedDataPoint adp = this.model.annotateTextCUI(key, value);
+            
+            if(singleCUI){
+                for(Map.Entry<String, String> entityToCUI : this.dataset.getEntityToCUI().entrySet()) {
+                if(adp.getAnnotatedCUIs().contains(entityToCUI.getValue())){
+                      if(outs.get(entityToCUI.getKey()) == null){
+                              Set<String> docs = new HashSet();
+                              docs.add(key);
+                              outs.put(entityToCUI.getKey(), docs);
+                          }else{
+                              Set<String> docsAlreadyExisting = outs.get(entityToCUI.getKey());
+                              docsAlreadyExisting.add(key);
+                              outs.put(entityToCUI.getKey(), docsAlreadyExisting);
+                                     
+                          }
+                }
+            }
+                
+            }else{
+                 for(Map.Entry<String, List<String>> entityToCUI : this.dataset.getEntityToCUIs().entrySet()) {
+                     Set<String> truth = new HashSet(entityToCUI.getValue());
+                     Set<String> model = new HashSet(adp.getAnnotatedCUIs());
+                     truth.retainAll(model);
+                     if(truth.size() > 0){
+                         if(outs.get(entityToCUI.getKey()) == null){
+                              Set<String> docs = new HashSet();
+                              docs.add(key);
+                              outs.put(entityToCUI.getKey(), docs);
+                          }else{
+                              Set<String> docsAlreadyExisting = outs.get(entityToCUI.getKey());
+                              docsAlreadyExisting.add(key);
+                              outs.put(entityToCUI.getKey(), docsAlreadyExisting);
+                                     
+                          }
+                     }
+                 }
+            }
+           
+           
         }
-        //Calculate Measures
-        double precision = this.calcPrecision(totalNumIntersection, totalNumRetrieved);
-        double recall = this.calcRecall(totalNumIntersection, totalNumRelevant);
-        double f1 = this.calcFMeasure(precision, recall);
-        System.out.println("Precision: "+precision);
-        System.out.println("Recall: "+recall);
-        System.out.println("F1: "+f1);
+         for(Map.Entry<String, List<String>> labelEntry : this.dataset.getLabelData().entrySet() ){
+                
+                System.out.println("Results for Entity: "+labelEntry.getKey());
+                List<Set<String>> cmpResults = this.compare(new HashSet(labelEntry.getValue()), outs.get(labelEntry.getKey()));
+                 //Later used to calculate Precision and Recall
+                int totalNumRelevant = this.getNumRelevant(cmpResults);
+                int totalNumRetrieved = this.getNumRetrieved(cmpResults);
+                int totalNumIntersection = this.getNumIntersection(cmpResults);
+                //Calculate Measures
+                double precision = this.calcPrecision(totalNumIntersection, totalNumRetrieved);
+                double recall = this.calcRecall(totalNumIntersection, totalNumRelevant);
+                double f1 = this.calcFMeasure(precision, recall);
+                System.out.println("Precision: "+precision);
+                System.out.println("Recall: "+recall);
+                System.out.println("F1: "+f1);
+            }
   
     }
     
@@ -106,7 +147,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both 
      * @return #only in ground truth + # in both
      */
-    private int getNumRelevant(List<Set<AtomStringLabel>> comparisons){
+    private int getNumRelevant(List<Set<String>> comparisons){
         return comparisons.get(0).size() + comparisons.get(2).size();
     }
     
@@ -116,7 +157,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both
      * @return #only in model output + # in both
      */
-    private int getNumRetrieved(List<Set<AtomStringLabel>> comparisons){
+    private int getNumRetrieved(List<Set<String>> comparisons){
         return comparisons.get(1).size() + comparisons.get(2).size();
     }
     
@@ -126,7 +167,7 @@ public class Experiment {
      * @param comparisons 0: set of labels only in ground truths 1: set of labels only in model output 2: set of labels that occur in both
      * @return # in both
      */
-    private int getNumIntersection(List<Set<AtomStringLabel>> comparisons){
+    private int getNumIntersection(List<Set<String>> comparisons){
         return comparisons.get(2).size();
     }
     
@@ -181,34 +222,32 @@ public class Experiment {
      * @param modelOut
      * @return 3 sets namely: {cuis only in labelset}, {cuis only in outputset}, {cuis occuring in both sets}
      */
-    private List<Set<AtomStringLabel>> compare(AnnotatedStringDataPoint labels, AnnotatedStringDataPoint modelOut){
+    private List<Set<String>> compare(Set<String> labels, Set<String> modelOut){
         
-        //Convert list to set to remove duplicates
-        Set<AtomStringLabel> labelSet = labels.getAnnotatedConcepts();
-        Set<AtomStringLabel> outSet = modelOut.getAnnotatedConcepts();
-        
-     
-        
+        if(modelOut == null){
+            modelOut = new HashSet();
+        }
+       
         //Need copy since remove operation is inplace and does not return modified version
-        Set<AtomStringLabel> labelCopy = new HashSet(labelSet);
+        Set<String> labelCopy = new HashSet(labels);
         
         //CreateIntersection
-        Set<AtomStringLabel> intersection = new HashSet(labelSet);
-        intersection.retainAll(outSet);
+        Set<String> intersection = new HashSet(labels);
+        intersection.retainAll(modelOut);
         
         
         //CreateDiff Labels/Out 
         //Filter for elements that only exist in labelSet
-        labelSet.removeAll(outSet);
+        labels.removeAll(modelOut);
         
         //CreateDiff Out/Labels
         //Filter for elements that only exist in outSet
-        outSet.removeAll(labelCopy);
+        modelOut.removeAll(labelCopy);
         
         //Save 3 comparison sets in a list
-        List<Set<AtomStringLabel>> setComparisons = new ArrayList();
-        setComparisons.add(labelSet);
-        setComparisons.add(outSet);
+        List<Set<String>> setComparisons = new ArrayList();
+        setComparisons.add(labels);
+        setComparisons.add(modelOut);
         setComparisons.add(intersection);
         
         return setComparisons;

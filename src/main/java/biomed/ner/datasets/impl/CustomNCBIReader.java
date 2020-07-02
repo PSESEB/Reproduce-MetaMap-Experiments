@@ -76,6 +76,8 @@ public class CustomNCBIReader implements iDatasetReader{
      */
     private String[] entityTypes;
     
+    private boolean cuiOut = false;
+    
     
 
     @Override
@@ -222,6 +224,11 @@ public class CustomNCBIReader implements iDatasetReader{
     @Override
     public AnnotatedData getLabelData() {
         return this.labelData;
+    }
+
+    @Override
+    public boolean isCUIoutput() {
+        return this.cuiOut;
     }
     
 }

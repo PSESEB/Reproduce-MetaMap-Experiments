@@ -22,8 +22,10 @@ package biomed.ner.evaluation;
 
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.datasets.impl.CustomNCBIReader;
+import biomed.ner.datasets.impl.I2B22008Reader;
 import biomed.ner.datasets.impl.I2B22010Reader;
 import biomed.ner.datasets.impl.NCBIReader;
+import biomed.ner.datasets.impl.ShAReReader;
 import biomed.ner.models.iModel;
 import biomed.ner.models.impl.CTakesModel;
 import biomed.ner.models.impl.MetaMapLiteModel;
@@ -75,9 +77,57 @@ public class ExperimentFactory {
                 exp.setDataset(i2b22010);
                 linesFlag = true;
                 break;
+            case "Share":
+            case "ShARe":
+            case "share":
+                iDatasetReader shr = new ShAReReader();
+                shr.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/ShARe/physionet.org/files/shareclefehealth2014task2/1.0/2014ShAReCLEFeHealthTasks2_training_10Jan2014", "", "");
+                shr.parseDataset();
+                exp.setDataset(shr);
+                linesFlag = true;
+                break;
             default:
                 System.out.println("Datset Not Found! No dataset was loaded.");
         }
+        //Check which Model should be used for dataset
+        switch(model){
+            case "MetaMapLite":
+            case "MML":
+                //instantiate new Meta Map Lite Model
+                iModel metaMapLite = new MetaMapLiteModel("/opt/MetaMap/public_mm_lite",semanticGroup,linesFlag);
+                exp.setModel(metaMapLite);
+                break;
+                
+            case "cTakes":
+            case "ctakes":
+                //instantiate new cTakes Model
+                iModel cTakes = new CTakesModel();
+                exp.setModel(cTakes);
+                break;
+            case "MetaMap":
+            case "MM":
+                //instantiate new MetaMapModel
+                iModel metaMap = new MetaMapModel(semanticGroup);
+                exp.setModel(metaMap);
+                break;
+            default:
+                System.out.println("Model not found! No model was loaded.");
+        }
+        
+        return exp;
+    }
+    
+    public static ExperimentCompleteDoc getExperimentCompleteDoc(String model){
+          ExperimentCompleteDoc exp = new ExperimentCompleteDoc();
+        String semanticGroup = "patf,dsyn,mobd,topp";
+        boolean linesFlag = true;
+        //First check which Dataset is choosen
+        I2B22008Reader ds = new I2B22008Reader();
+        ds.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_patient_records_test.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_standoff_annotations_test_textual.xml", "");
+        ds.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_patient_records_training.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_standoff_textual_annotations_training.xml", "");
+        ds.parseDataset();
+        exp.setDataset(ds);
+        
         //Check which Model should be used for dataset
         switch(model){
             case "MetaMapLite":

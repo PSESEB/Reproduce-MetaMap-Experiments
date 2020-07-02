@@ -32,6 +32,7 @@ import gov.nih.nlm.nls.metamap.PCM;
 import gov.nih.nlm.nls.metamap.Position;
 import gov.nih.nlm.nls.metamap.Result;
 import gov.nih.nlm.nls.metamap.Utterance;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +61,7 @@ public class MetaMapModel implements iModel {
     }
 
     @Override
-    public AnnotatedStringDataPoint annotateText(String id, String text) {
+    public AnnotatedStringDataPoint annotateText(String id, String text, boolean cui) {
 
           //Create empty result set to be filled with suggested labels of Meta Map Lite
         AnnotatedStringDataPoint result = new AnnotatedStringDataPoint(id);
@@ -79,10 +80,13 @@ public class MetaMapModel implements iModel {
                     for (PCM pcm : utterance.getPCMList()) {
                         for (Mapping map : pcm.getMappingList()) {
                             for (Ev mapEv : map.getEvList()) {
-//                                System.out.println("   Concept Id: " + mapEv.getConceptId());
-//                                System.out.println("   Concept Name: " + mapEv.getConceptName());
+                                 //System.out.println("   Concept Id: " + mapEv.getConceptId());
+                                 //System.out.println("   Concept Name: " + mapEv.getConceptName());
 //                                System.out.println("   Preferred Name: " + mapEv.getPreferredName());
                                 String conceptText = String.join(" ",mapEv.getMatchedWords());
+                               if(cui){
+                                   conceptText = mapEv.getConceptId();
+                               }
 //                                System.out.println("   Matched Words: " + String.join(" ",mapEv.getMatchedWords()));
 //                                System.out.println("   Positional Info: " + mapEv.getPositionalInfo());
                                 for(Position pos : mapEv.getPositionalInfo()){
@@ -105,7 +109,40 @@ public class MetaMapModel implements iModel {
 
     @Override
     public AnnotatedDataPoint annotateTextCUI(String id, String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         //Create empty result set to be filled with suggested labels of Meta Map Lite
+        AnnotatedDataPoint result = new AnnotatedDataPoint(id, new ArrayList<>());
+        
+          
+        //Parse NCBI tab seperated text to one single text
+        String[] ncbiSplit = text.split("\t");
+        //Usually looks like id\tTitle\tAbstract -> We only need title and abstract
+        String fullText = ncbiSplit[1]+" "+ncbiSplit[2];
+        
+        
+        List<Result> resultList = api.processCitationsFromString(fullText);
+
+        for (Result res : resultList) {
+            try {
+               
+                for (Utterance utterance : res.getUtteranceList()) {
+                    for (PCM pcm : utterance.getPCMList()) {
+                        for (Mapping map : pcm.getMappingList()) {
+                            for (Ev mapEv : map.getEvList()) {
+                          
+                                 result.addAnnotatedCUI(mapEv.getConceptId());
+                              
+                            }
+                        }
+                    }
+
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(MetaMapModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        return result;
+    
     }
 
 }

@@ -65,6 +65,8 @@ public class NCBIReader implements iDatasetReader{
      */
     private Map<String,String> parsedInput;
     
+    private boolean cuiOut = false;
+    
     
 
     @Override
@@ -239,6 +241,11 @@ public class NCBIReader implements iDatasetReader{
     @Override
     public AnnotatedData getLabelData() {
         return this.labelData;
+    }
+    
+     @Override
+    public boolean isCUIoutput() {
+        return this.cuiOut;
     }
     
 }

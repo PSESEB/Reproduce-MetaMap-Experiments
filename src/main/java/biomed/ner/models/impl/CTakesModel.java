@@ -91,7 +91,7 @@ public class CTakesModel implements iModel{
     }
 
     @Override
-    public AnnotatedStringDataPoint annotateText(String id, String text) {
+    public AnnotatedStringDataPoint annotateText(String id, String text, boolean cui) {
         
          //Create empty result set to be filled with suggested labels of Meta Map Lite
         AnnotatedStringDataPoint result = new AnnotatedStringDataPoint(id);
@@ -117,7 +117,13 @@ public class CTakesModel implements iModel{
          //Get relevant 
          List<Response> found  = resultMap.get("DiseaseDisorderMention");
          for(Response r : found){
-             AtomStringLabel asl = new AtomStringLabel(r.getText(), r.getBegin(), r.getEnd());
+             String labelText;
+             if(cui){
+                 labelText = r.conceptAttributes.get(0).get("cui");
+             }else{
+                 labelText = r.getText();
+             }
+             AtomStringLabel asl = new AtomStringLabel(labelText, r.getBegin(), r.getEnd());
              result.addConcept(asl);
          }
          
@@ -132,7 +138,44 @@ public class CTakesModel implements iModel{
 
     @Override
     public AnnotatedDataPoint annotateTextCUI(String id, String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          
+        AnnotatedDataPoint result = new AnnotatedDataPoint(id, new ArrayList<>());
+
+          //Parse NCBI tab seperated text to one single text
+        String[] ncbiSplit = text.split("\t");
+        //Usually looks like id\tTitle\tAbstract -> We only need title and abstract
+        String fullText = ncbiSplit[1]+" "+ncbiSplit[2];
+        
+        //Create Map to store output of cTakes
+         Map<String, List<Response>> resultMap;
+        try {
+            //Create cTakes Pipeline
+            JCas jcas = pipeline.newJCas();
+            //Load text to pipeline
+	    jcas.setDocumentText(fullText);
+            //Process document
+            pipeline.process(jcas);
+            //Parse the results
+            resultMap = parse(jcas);
+            jcas.reset();
+             
+         //Get relevant 
+         List<Response> found  = resultMap.get("DiseaseDisorderMention");
+         for(Response r : found){
+             
+             for(Map<String,String> m : r.conceptAttributes){
+               result.addAnnotatedCUI(m.get("cui"));
+             }
+            
+         }
+         
+         } catch (AnalysisEngineProcessException ex) {
+             Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (Exception ex) {
+             Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
+        return result;
     }
     
 }

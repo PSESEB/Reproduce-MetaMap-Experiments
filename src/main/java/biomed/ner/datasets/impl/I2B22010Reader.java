@@ -70,6 +70,8 @@ public class I2B22010Reader implements iDatasetReader{
      */
     private String[] entityTypes;
     
+    private boolean cuiOut = false;
+    
     
     private void listf(String directoryName, List<File> files) {
     File directory = new File(directoryName);
@@ -270,6 +272,11 @@ public class I2B22010Reader implements iDatasetReader{
     @Override
     public AnnotatedData getLabelData() {
         return this.labelData;
+    }
+    
+     @Override
+    public boolean isCUIoutput() {
+        return this.cuiOut;
     }
     
 }

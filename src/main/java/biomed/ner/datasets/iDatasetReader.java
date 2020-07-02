@@ -56,4 +56,6 @@ public interface iDatasetReader {
      */
     public AnnotatedData getLabelData();
     
+    public boolean isCUIoutput();
+    
 }

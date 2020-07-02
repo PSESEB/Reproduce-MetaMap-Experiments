@@ -35,7 +35,7 @@ public interface iModel {
      * @param text Text to be annotated
      * @return annotations as suggested by model 
      */
-    public AnnotatedStringDataPoint annotateText(String id, String text);
+    public AnnotatedStringDataPoint annotateText(String id, String text, boolean cui);
     
      /**
      * Annotates given text.
