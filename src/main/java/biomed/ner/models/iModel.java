@@ -45,4 +45,6 @@ public interface iModel {
      * @return annotations as suggested by model 
      */
     public AnnotatedDataPoint annotateTextCUI(String id, String text);
+    
+    public String getModelName();
 }

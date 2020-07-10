@@ -174,6 +174,11 @@ public class MetaMapLiteModel implements iModel {
         return result;
     
     }
+
+    @Override
+    public String getModelName() {
+        return "Meta Map Lite";
+    }
     
     
     

@@ -63,8 +63,9 @@ public class Experiment {
     
     /**
      * Runs and evaluates Experiment
+     * Returns results in map where p:Precision r:Recall f1:F1 t:Time
      */
-    public void runExperiment(){
+    public Map<String,Double> runExperiment(){
         //check if dataset and model is set
         //Necessary to run experiment.
         assert this.dataset != null : "No datset loaded";
@@ -75,6 +76,7 @@ public class Experiment {
         int totalNumRetrieved = 0;
         int totalNumIntersection = 0;
         
+        long startTime = System.nanoTime();
         //Iterate over Dataset
         for (Map.Entry<String, String> entry : this.dataset.getInputData().entrySet()) {
             Logger.getLogger(Experiment.class.getName()).log(Level.INFO,"Processing Datapoint with ID "+entry.getKey());
@@ -90,6 +92,10 @@ public class Experiment {
             totalNumIntersection += this.getNumIntersection(comparisons);
 //            System.out.println("rel "+totalNumRelevant+" ret "+totalNumRetrieved+" int "+totalNumIntersection);
         }
+        //calculate total runtime
+        long totalTime = System.nanoTime() - startTime;
+        //parse time into seconds
+        double seconds = ((double) totalTime) / 1E9;
         //Calculate Measures
         double precision = this.calcPrecision(totalNumIntersection, totalNumRetrieved);
         double recall = this.calcRecall(totalNumIntersection, totalNumRelevant);
@@ -97,7 +103,15 @@ public class Experiment {
         System.out.println("Precision: "+precision);
         System.out.println("Recall: "+recall);
         System.out.println("F1: "+f1);
-  
+        System.out.println("Time: "+seconds);
+        //Give back results to caller
+        Map<String,Double> results = new HashMap();
+        results.put("p", precision);
+        results.put ("r",recall);
+        results.put("f1", f1);
+        results.put("t", seconds);
+        
+        return results;
     }
     
     /**

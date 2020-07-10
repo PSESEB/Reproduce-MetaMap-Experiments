@@ -145,4 +145,9 @@ public class MetaMapModel implements iModel {
     
     }
 
+    @Override
+    public String getModelName() {
+        return "Meta Map";
+    }
+
 }

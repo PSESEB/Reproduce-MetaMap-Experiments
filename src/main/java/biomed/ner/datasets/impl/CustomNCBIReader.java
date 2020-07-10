@@ -230,5 +230,10 @@ public class CustomNCBIReader implements iDatasetReader{
     public boolean isCUIoutput() {
         return this.cuiOut;
     }
+
+    @Override
+    public String getDatasetName() {
+            return "LHC NCBI";
+    }
     
 }

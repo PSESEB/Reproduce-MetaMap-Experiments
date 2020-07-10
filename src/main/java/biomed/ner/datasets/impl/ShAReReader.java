@@ -219,4 +219,8 @@ public class ShAReReader implements iDatasetReader{
         return this.cuiOut;
     }
     
+    @Override
+    public String getDatasetName() {
+            return "ShARe";
+    }
 }

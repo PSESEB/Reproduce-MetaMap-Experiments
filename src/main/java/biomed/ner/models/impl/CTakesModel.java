@@ -177,5 +177,10 @@ public class CTakesModel implements iModel{
         
         return result;
     }
+
+    @Override
+    public String getModelName() {
+        return "cTakes";
+    }
     
 }

@@ -248,4 +248,10 @@ public class NCBIReader implements iDatasetReader{
         return this.cuiOut;
     }
     
+    @Override
+    public String getDatasetName() {
+            return "NCBI";
+    }
+    
+    
 }

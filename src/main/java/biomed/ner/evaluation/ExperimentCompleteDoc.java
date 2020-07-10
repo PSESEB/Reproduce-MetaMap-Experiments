@@ -63,8 +63,10 @@ public class ExperimentCompleteDoc {
     
     /**
      * Runs and evaluates Experiment
+     * @param singleCUI
+     * @return 
      */
-    public void runExperiment(boolean singleCUI){
+    public Map <String,Map<String,Double>> runExperiment(boolean singleCUI){
         //check if dataset and model is set
         //Necessary to run experiment.
         assert this.dataset != null : "No datset loaded";
@@ -122,6 +124,7 @@ public class ExperimentCompleteDoc {
            
            
         }
+        Map <String,Map<String,Double>> entityResults = new HashMap();
          for(Map.Entry<String, List<String>> labelEntry : this.dataset.getLabelData().entrySet() ){
                 
                 System.out.println("Results for Entity: "+labelEntry.getKey());
@@ -137,7 +140,18 @@ public class ExperimentCompleteDoc {
                 System.out.println("Precision: "+precision);
                 System.out.println("Recall: "+recall);
                 System.out.println("F1: "+f1);
+                
+                    //Give back results to caller
+                Map<String,Double> results = new HashMap();
+                results.put("p", precision);
+                results.put ("r",recall);
+                results.put("f1", f1);
+                entityResults.put(labelEntry.getKey()+";"+this.getModel().getModelName(), results);
             }
+         
+  
+       return entityResults;
+        
   
     }
     

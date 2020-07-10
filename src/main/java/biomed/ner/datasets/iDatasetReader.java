@@ -56,6 +56,15 @@ public interface iDatasetReader {
      */
     public AnnotatedData getLabelData();
     
+    /**
+     * Check if output is prefferedText or CUIs
+     * @return 
+     */
     public boolean isCUIoutput();
     
+    /**
+     * 
+     * @return Name of dataset
+     */
+    public String getDatasetName();
 }

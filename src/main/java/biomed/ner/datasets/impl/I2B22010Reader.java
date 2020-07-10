@@ -279,4 +279,9 @@ public class I2B22010Reader implements iDatasetReader{
         return this.cuiOut;
     }
     
+     @Override
+    public String getDatasetName() {
+            return "i2b2 2010";
+    }
+    
 }
