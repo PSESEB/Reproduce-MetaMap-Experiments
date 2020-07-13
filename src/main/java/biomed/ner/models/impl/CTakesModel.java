@@ -27,6 +27,7 @@ import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.ctakes.typesystem.type.refsem.UmlsConcept;
 import org.apache.ctakes.typesystem.type.textsem.*;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -58,6 +59,7 @@ public class CTakesModel implements iModel{
              Logger.getLogger(CTakesModel.class.getName()).log(Level.SEVERE, null, ex);
          }
          
+        
           // CUI types:
              semClasses.add(DiseaseDisorderMention.class);
              semClasses.add(SignSymptomMention.class);
@@ -65,6 +67,8 @@ public class CTakesModel implements iModel{
              semClasses.add(AnatomicalSiteMention.class);
              semClasses.add(MedicationMention.class);
              semClasses.add(EntityMention.class);
+        
+             
              
     }
          
@@ -161,12 +165,16 @@ public class CTakesModel implements iModel{
              
          //Get relevant 
          List<Response> found  = resultMap.get("DiseaseDisorderMention");
-         for(Response r : found){
+         for (Map.Entry<String,List<Response>> entry :resultMap.entrySet()){
              
-             for(Map<String,String> m : r.conceptAttributes){
-               result.addAnnotatedCUI(m.get("cui"));
-             }
-            
+         
+            for(Response r : entry.getValue()){
+
+                for(Map<String,String> m : r.conceptAttributes){
+                  result.addAnnotatedCUI(m.get("cui"));
+                }
+
+            }
          }
          
          } catch (AnalysisEngineProcessException ex) {

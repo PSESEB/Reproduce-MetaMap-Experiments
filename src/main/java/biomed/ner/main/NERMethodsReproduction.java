@@ -91,7 +91,7 @@ public class NERMethodsReproduction {
         
           ExperimentCompleteDoc expComp = ExperimentFactory.getExperimentCompleteDoc("ctakes");
           
-          rcsv.addCompleteDocResults(expComp.runExperiment(true),"SingleCUIs");
+          rcsv.addCompleteDocResults(expComp.runExperiment(false),"SingleCUIs");
             
           rcsv.writeResultsToCSV("/home/weenzeal/Documents/MasterArbeit");
            // Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
