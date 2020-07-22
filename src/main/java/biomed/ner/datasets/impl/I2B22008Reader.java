@@ -87,7 +87,7 @@ public class I2B22008Reader {
         entityToCUI.put("Asthma", "C0004096");
         entityToCUI.put("CAD", "C1956346");
         entityToCUI.put("CHF", "C0018802");
-        entityToCUI.put("Depression", "C0011581");
+        entityToCUI.put("Depression", "C0011570");
         entityToCUI.put("Diabetes", "C0011849");
         entityToCUI.put("Gallstones", "C0008320");
         entityToCUI.put("GERD", "C0017168");

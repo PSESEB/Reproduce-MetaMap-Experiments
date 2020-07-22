@@ -20,10 +20,13 @@
  */
 package biomed.ner.datasets.impl;
 
-
 import biomed.ner.datasets.ReaderHelper;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.structure.AnnotatedData;
+import biomed.ner.structure.AnnotatedDataPoint;
+import biomed.ner.structure.AnnotatedStringDataPoint;
 import biomed.ner.structure.AtomStringLabel;
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,22 +44,30 @@ import java.util.logging.Logger;
  * But the Annotations are loaded from the .ann files provided by LHC
  * @author Sebastian Hennig
  */
-public class ShAReReader implements iDatasetReader{
+public class LHCReader implements iDatasetReader{
     
-
+    /**
+     * Temporary Storage of Input after file reading
+     */
+    private ArrayList<String> inputData;
     
     /**
      * Storage of all labels
      */
     private AnnotatedData labelData;
     
-     //Datafiles in Share folder
-    public List<File> dats;
+    //Datafiles in lhc folder
+    private List<File> dats;
+    
+    /**
+     * Name of LHC dataset (bio cits or Clin Cits)
+     */
+    private String datasetName;
     
     /**
      * Temporary Storage of Labels before parsing to internal structure
      */
-    private List<String> intermediateAnnotations;
+    private Map<String,String> intermediateAnnotations;
     
     /**
      * Path do dataset
@@ -75,17 +86,21 @@ public class ShAReReader implements iDatasetReader{
      */
     private String[] entityTypes;
     
-    private boolean cuiOut = true;
+    private boolean cuiOut = false;
     
     
-    
-
     @Override
     public void loadDataset(String path, String file,String settings){
         
           //Initialize
         this.parsedInput = new HashMap();
-        this.intermediateAnnotations = new ArrayList();
+        this.intermediateAnnotations = new HashMap();
+        
+        if(file.equals("bio")){
+            this.datasetName = "LHC-Bio Cits";
+        }else{
+              this.datasetName = "LHC-Clin Cits";
+        }
         
         //Save different Entity Types that should be scanned for
         String[] entityType;
@@ -100,12 +115,12 @@ public class ShAReReader implements iDatasetReader{
         dats = new ArrayList();
         ReaderHelper.listf(path, dats);
       
-        dats.removeIf(f -> f.isHidden() || !(ReaderHelper.getFileExtension(f).equals("txt") ));
+        dats.removeIf(f -> f.isHidden() || ReaderHelper.getFileExtension(f).equals("msg") );
         
 
       
         for(File f:dats){
-            
+            String identifier = f.getName().split("\\.")[0];
             try {
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 StringBuilder sb = new StringBuilder();
@@ -119,12 +134,16 @@ public class ShAReReader implements iDatasetReader{
                     }
                 
                    //Label
-            if(f.toString().contains(".pipe.")){
-               this.intermediateAnnotations.add(sb.toString());
+            
+            if(ReaderHelper.getFileExtension(f).equals("ann")){
+                
+               this.intermediateAnnotations.put(identifier,sb.toString());
+                        
                
             }else{//Input text
-                this.parsedInput.put(f.getName(), sb.toString().replace("\t", " ").replace(System.lineSeparator()+System.lineSeparator()
-                        , " "+System.lineSeparator()));
+                
+                
+                this.parsedInput.put(identifier, sb.toString());
                
                 
             }
@@ -147,35 +166,49 @@ public class ShAReReader implements iDatasetReader{
         
         //PARSE LABELS
         this.labelData = new AnnotatedData();
-        for(String s: this.intermediateAnnotations){
-            for(String line : s.split(System.lineSeparator())){
-                String[] singleComponents = line.split("\\|");
-               
-                
-                if(singleComponents[1].contains(",") || singleComponents[2].equals("CUI-less") ){
+        //Iterate over loaded labelset
+        for (Map.Entry<String, String> entry : this.intermediateAnnotations.entrySet()) {
+            //retrieve document identifier
+            String id = entry.getKey();
+            //Create new DataPoint
+            AnnotatedStringDataPoint dp = new AnnotatedStringDataPoint(id);
+            //Split .ann labels into its single lines
+            String[] lines = entry.getValue().split(System.lineSeparator());
+            //For every line check if they are T values
+            for(String line : lines){
+                String[] components = line.split("\t");
+               //If relevant T value -> further process this entry
+                if(components[0].contains("T")){
                     
-                    continue;
+                    //Split label furth to identify Entity aswell as offsets
+                    String[] detailledComponents = components[1].split(" ");
+                    if(Arrays.stream(this.entityTypes).anyMatch(detailledComponents[0]::equals)){
+                        AtomStringLabel asl;
+                        //In case of non composite lables
+                        if(detailledComponents.length < 4){
+                            asl = new AtomStringLabel(components[2], Integer.parseInt(detailledComponents[1])+1, Integer.parseInt(detailledComponents[2])+1);
+                      
+                        //Case of composite lables   
+                       }else{
+                         
+                            asl = new AtomStringLabel(components[2], Integer.parseInt(detailledComponents[1])+1, Integer.parseInt(detailledComponents[detailledComponents.length-1])+1);
+                        }
+                        //Add concept to labelset
+                        dp.addConcept(asl);
+                    }
                 }
-                String[] positions = singleComponents[1].split("-");
-                //Offset is shifted 1 pos left so we add 1 here
-                AtomStringLabel asl = new AtomStringLabel(singleComponents[2], Integer.parseInt(positions[0])+1, Integer.parseInt(positions[1])+1);
-                this.labelData.addDatapoint(singleComponents[0], asl);
-                
             }
-           
+            //Add complete label to dataset
+            this.labelData.addDatapoint(dp);
         }
-        Set<String> cmp1 = new HashSet(this.labelData.getAllDatapoints().keySet());
-        Set<String> cmp2 = new HashSet(this.parsedInput.keySet());
-       
-        cmp2.removeAll(cmp1);
-        
-        this.parsedInput.keySet().removeAll(cmp2);
-        
-      
+
+
+        System.out.println("Size Lables "+this.labelData.size());
         
         //PARSE INPUT DATA
-        this.parsedInput.forEach((k, v) ->  this.parsedInput.put(k, k+"\t\t"+v));
+       this.parsedInput.forEach((k, v) ->  this.parsedInput.put(k, k+"\t\t"+v));
         
+        System.out.println("Input Size: "+this.parsedInput.size());
         
     }
 
@@ -188,14 +221,15 @@ public class ShAReReader implements iDatasetReader{
     public AnnotatedData getLabelData() {
         return this.labelData;
     }
-    
-     @Override
+
+    @Override
     public boolean isCUIoutput() {
         return this.cuiOut;
     }
-    
+
     @Override
     public String getDatasetName() {
-            return "ShARe";
+            return this.datasetName;
     }
+    
 }

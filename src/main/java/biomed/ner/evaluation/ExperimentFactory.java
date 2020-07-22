@@ -24,6 +24,7 @@ import biomed.ner.datasets.iDatasetReader;
 import biomed.ner.datasets.impl.CustomNCBIReader;
 import biomed.ner.datasets.impl.I2B22008Reader;
 import biomed.ner.datasets.impl.I2B22010Reader;
+import biomed.ner.datasets.impl.LHCReader;
 import biomed.ner.datasets.impl.NCBIReader;
 import biomed.ner.datasets.impl.ShAReReader;
 import biomed.ner.models.iModel;
@@ -85,6 +86,23 @@ public class ExperimentFactory {
                 shr.parseDataset();
                 exp.setDataset(shr);
                 linesFlag = true;
+                break;
+            case "lhcbio":
+            case "lhc bio":
+            case "bio cits":
+            case "biocits":
+                 iDatasetReader lhcbio = new LHCReader();
+                lhcbio.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/LHC/Bio_Cits_TC", "bio", "Disorder,GeneralDisorder");
+                lhcbio.parseDataset();
+                exp.setDataset(lhcbio);
+            case "lhcclin":
+            case "lhc clin":
+            case "clin cits":
+            case "clincits":
+                iDatasetReader lhcclin = new LHCReader();
+                lhcclin.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/LHC/Clin_Cits_TC", "clin", "Disorder,GeneralDisorder");
+                lhcclin.parseDataset();
+                exp.setDataset(lhcclin);
                 break;
             default:
                 System.out.println("Datset Not Found! No dataset was loaded.");

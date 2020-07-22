@@ -23,7 +23,6 @@ package biomed.ner.evaluation;
 import biomed.ner.datasets.impl.I2B22008Reader;
 import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
-import biomed.ner.structure.AtomStringLabel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

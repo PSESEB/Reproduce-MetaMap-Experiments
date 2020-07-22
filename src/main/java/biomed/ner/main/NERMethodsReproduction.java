@@ -20,6 +20,8 @@
  */
 package biomed.ner.main;
 
+import biomed.ner.datasets.iDatasetReader;
+import biomed.ner.datasets.impl.LHCReader;
 import biomed.ner.evaluation.Experiment;
 import biomed.ner.evaluation.ExperimentCompleteDoc;
 import biomed.ner.evaluation.ExperimentFactory;
@@ -41,68 +43,82 @@ public class NERMethodsReproduction {
      */
     public static void main(String[] args){
         
+      
+       
         ResultCSV rcsv = new ResultCSV();
        
-        Experiment shareMML = ExperimentFactory.getExperiment("share", "MM");
-        Experiment shareMM = ExperimentFactory.getExperiment("share", "MML");
-        //shareMML.runExperiment();
+        //Share
+        Experiment shareMML = ExperimentFactory.getExperiment("share", "MML");
+        rcsv.addExperimentResults(shareMML, shareMML.runExperiment());
         
-          Map<String,Double> test = new HashMap();
-        test.put("p", 0.4);
-        test.put ("r",6.5);
-        test.put("f1", 100.0);
-        test.put("t", 40.4);
+        Experiment shareMM = ExperimentFactory.getExperiment("share", "MM");
+        rcsv.addExperimentResults(shareMM, shareMM.runExperiment());
         
-        rcsv.addExperimentResults(shareMML, test);
-        Map<String,Double> test2 = new HashMap();
-         test2.put("p", 0.1);
-        test2.put ("r",1.225);
-        test2.put("f1", 10.0);
-        test2.put("t", 40.4);
-         rcsv.addExperimentResults(shareMM, test2);
+        Experiment shareCTakes = ExperimentFactory.getExperiment("share", "ctakes");
+        rcsv.addExperimentResults(shareCTakes, shareCTakes.runExperiment());
         
+        //NCBI
+         Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
+        rcsv.addExperimentResults(ncbiMML, ncbiMML.runExperiment());
         
+        Experiment ncbiMM = ExperimentFactory.getExperiment("CustomNCBI", "MM");
+        rcsv.addExperimentResults(ncbiMM, ncbiMM.runExperiment());
         
-        //ExperimentCompleteDoc compMML = ExperimentFactory.getExperimentCompleteDoc("MML");
-        //compMML.runExperiment(false);
-       
+        Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "ctakes");
+        rcsv.addExperimentResults(ncbiCTakes, ncbiCTakes.runExperiment());
         
+        //i2b2 2010
+          Experiment i2b22010MML = ExperimentFactory.getExperiment("i2b22010", "MML");
+        rcsv.addExperimentResults(i2b22010MML, i2b22010MML.runExperiment());
         
-            Experiment i2b2MML = ExperimentFactory.getExperiment("i2b2 2010", "MML");
-             Experiment i2b2MM = ExperimentFactory.getExperiment("i2b2 2010", "MM");
-             Experiment i2b2ct = ExperimentFactory.getExperiment("i2b2 2010", "ctakes");
-            //i2b2MML.runExperiment();
-            Map<String,Double> test3 = new HashMap();
-           test3.put("p", 9.332);
-        test3.put ("r",0.1234);
-        test3.put("f1", 0.011);
-        test3.put("t", 40.4);
-          rcsv.addExperimentResults(i2b2MML, test3);
-          
-          Map<String,Double> test4 = new HashMap();
-           test4.put("p", 1.14);
-        test4.put ("r",0.999);
-        test4.put("f1", 999.0);
-        test4.put("t", 40.4);
-          rcsv.addExperimentResults(i2b2MM, test4);
-          rcsv.addExperimentResults(i2b2ct, test4);
+        Experiment i2b22010MM = ExperimentFactory.getExperiment("i2b22010", "MM");
+        rcsv.addExperimentResults(i2b22010MM, i2b22010MM.runExperiment());
+        
+        Experiment i2b22010CTakes = ExperimentFactory.getExperiment("i2b22010", "ctakes");
+        rcsv.addExperimentResults(i2b22010CTakes, i2b22010CTakes.runExperiment());
+        
+        //LHC bio
+        
+          Experiment lhcbioMML = ExperimentFactory.getExperiment("lhcbio", "MML");
+        rcsv.addExperimentResults(lhcbioMML, lhcbioMML.runExperiment());
+        
+        Experiment lhcbioMM = ExperimentFactory.getExperiment("lhcbio", "MM");
+        rcsv.addExperimentResults(lhcbioMM, lhcbioMM.runExperiment());
+        
+        Experiment lhcbioCTakes = ExperimentFactory.getExperiment("lhcbio", "ctakes");
+        rcsv.addExperimentResults(lhcbioCTakes, lhcbioCTakes.runExperiment());
+        
+        //LHC clin
+          Experiment lhcclinMML = ExperimentFactory.getExperiment("lhcclin", "MML");
+        rcsv.addExperimentResults(lhcclinMML, lhcclinMML.runExperiment());
+        
+        Experiment lhcclinMM = ExperimentFactory.getExperiment("lhcclin", "MM");
+        rcsv.addExperimentResults(lhcclinMM, lhcclinMM.runExperiment());
+        
+        Experiment lhcclinCTakes = ExperimentFactory.getExperiment("lhcclin", "ctakes");
+        rcsv.addExperimentResults(lhcclinCTakes, lhcclinCTakes.runExperiment());
+     
           
           
         
           ExperimentCompleteDoc expComp = ExperimentFactory.getExperimentCompleteDoc("ctakes");
           
           rcsv.addCompleteDocResults(expComp.runExperiment(false),"SingleCUIs");
+          rcsv.addCompleteDocResults(expComp.runExperiment(true),"MultipleCUIs");
+          
+           ExperimentCompleteDoc expCompMM = ExperimentFactory.getExperimentCompleteDoc("MM");
+          
+          rcsv.addCompleteDocResults(expCompMM.runExperiment(false),"SingleCUIs");
+          rcsv.addCompleteDocResults(expCompMM.runExperiment(true),"MultipleCUIs");
+          
+           ExperimentCompleteDoc expCompMML = ExperimentFactory.getExperimentCompleteDoc("MML");
+          
+          rcsv.addCompleteDocResults(expCompMML.runExperiment(false),"SingleCUIs");
+          rcsv.addCompleteDocResults(expCompMML.runExperiment(true),"MultipleCUIs");
             
           rcsv.writeResultsToCSV("/home/weenzeal/Documents/MasterArbeit");
-           // Experiment ncbiMML = ExperimentFactory.getExperiment("CustomNCBI", "MML");
-           // ncbiMML.runExperiment();
-           
-       ////  ncbiCTakes.runExperiment();
-          
-         // Experiment ncbiMM = ExperimentFactory.getExperiment("CustomNCBI", "MM");
-         // ncbiMM.runExperiment();
             
-  
+        
       
     }
     
