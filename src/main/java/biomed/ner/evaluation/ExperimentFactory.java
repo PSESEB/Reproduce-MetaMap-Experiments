@@ -55,7 +55,7 @@ public class ExperimentFactory {
             case "NCBI":
                 //Create NCBI Reader
                 iDatasetReader ncbi = new NCBIReader();
-                ncbi.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
+                ncbi.loadDataset("/home/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
                 ncbi.parseDataset();
                 exp.setDataset(ncbi);
                 break;
@@ -63,7 +63,7 @@ public class ExperimentFactory {
                 //Create NCBI Reader
                 iDatasetReader ncbiCust = new CustomNCBIReader();
                 //Only works for trainset since they only annotated the train set again and not the other ones.
-                ncbiCust.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
+                ncbiCust.loadDataset("/home/Datasets/NCBI_Disease/", "NCBItrainset_corpus.txt","Disorder,GeneralDisorder");
                 ncbiCust.parseDataset();
                 exp.setDataset(ncbiCust);
                 break;
@@ -73,7 +73,7 @@ public class ExperimentFactory {
                 //Create i2b2 2010 reader
                 iDatasetReader i2b22010 = new I2B22010Reader();
                 //Only take problems as labels same as Meta Map Lite authors
-                i2b22010.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2010", "", "problem");
+                i2b22010.loadDataset("/home/Datasets/i2b2_2010", "", "problem");
                 i2b22010.parseDataset();
                 exp.setDataset(i2b22010);
                 linesFlag = true;
@@ -82,7 +82,7 @@ public class ExperimentFactory {
             case "ShARe":
             case "share":
                 iDatasetReader shr = new ShAReReader();
-                shr.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/ShARe/physionet.org/files/shareclefehealth2014task2/1.0/2014ShAReCLEFeHealthTasks2_training_10Jan2014", "", "");
+                shr.loadDataset("/home/Datasets/ShARe/physionet.org/files/shareclefehealth2014task2/1.0/2014ShAReCLEFeHealthTasks2_training_10Jan2014", "", "");
                 shr.parseDataset();
                 exp.setDataset(shr);
                 linesFlag = true;
@@ -92,7 +92,7 @@ public class ExperimentFactory {
             case "bio cits":
             case "biocits":
                  iDatasetReader lhcbio = new LHCReader();
-                lhcbio.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/LHC/Bio_Cits_TC", "bio", "Disorder,GeneralDisorder");
+                lhcbio.loadDataset("/home/Datasets/LHC/Bio_Cits_TC", "bio", "Disorder,GeneralDisorder");
                 lhcbio.parseDataset();
                 exp.setDataset(lhcbio);
             case "lhcclin":
@@ -100,7 +100,7 @@ public class ExperimentFactory {
             case "clin cits":
             case "clincits":
                 iDatasetReader lhcclin = new LHCReader();
-                lhcclin.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/LHC/Clin_Cits_TC", "clin", "Disorder,GeneralDisorder");
+                lhcclin.loadDataset("/home/Datasets/LHC/Clin_Cits_TC", "clin", "Disorder,GeneralDisorder");
                 lhcclin.parseDataset();
                 exp.setDataset(lhcclin);
                 break;
@@ -141,8 +141,8 @@ public class ExperimentFactory {
         boolean linesFlag = true;
         //First check which Dataset is choosen
         I2B22008Reader ds = new I2B22008Reader();
-        ds.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_patient_records_test.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_standoff_annotations_test_textual.xml", "");
-        ds.loadDataset("/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_patient_records_training.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_standoff_textual_annotations_training.xml", "");
+        ds.loadDataset("/home/Datasets/i2b2_2008/test/obesity_patient_records_test.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_standoff_annotations_test_textual.xml", "");
+        ds.loadDataset("/home/Datasets/i2b2_2008/train 1/obesity_patient_records_training.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_standoff_textual_annotations_training.xml", "");
         ds.parseDataset();
         exp.setDataset(ds);
         
