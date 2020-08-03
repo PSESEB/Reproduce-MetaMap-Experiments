@@ -37,7 +37,7 @@ public class Pipeline {
          */
 	public static AggregateBuilder getAggregateBuilder() throws Exception {
 		AggregateBuilder builder = new AggregateBuilder();
-	      builder.add( ClinicalPipelineFactory.getTokenProcessingPipeline() );
+	        builder.add( ClinicalPipelineFactory.getTokenProcessingPipeline() );
 	     // builder.add( AnalysisEngineFactory.createEngineDescription("src/main/resources/desc/ctakes-clinical-pipeline/desc/analysis_engine/AggregatePlaintextUMLSProcessor"));
 	        
                 builder.add( AnalysisEngineFactory.createEngineDescription( DefaultJCasTermAnnotator.class,

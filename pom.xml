@@ -292,7 +292,7 @@
                 </dependency>
     </dependencies>
     <build>
-		<finalName>copy</finalName>
+		<finalName>reproduction</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -309,7 +309,13 @@
                                 <artifactId>maven-jar-plugin</artifactId>
                                <version>3.2.0</version>
                                 <configuration>
+                                    <excludes>
+                                        <exclude>org/**</exclude>
+                                    </excludes>
                                   <archive>
+                                      <manifestEntries>
+                                         <Class-Path>classes/</Class-Path>
+                                     </manifestEntries>
                                     <manifest>
                                       <addClasspath>true</addClasspath>
                                       <mainClass>biomed.ner.main.NERMethodsReproduction</mainClass>
