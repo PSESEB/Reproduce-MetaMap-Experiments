@@ -141,8 +141,8 @@ public class ExperimentFactory {
         boolean linesFlag = true;
         //First check which Dataset is choosen
         I2B22008Reader ds = new I2B22008Reader();
-        ds.loadDataset("/home/Datasets/i2b2_2008/test/obesity_patient_records_test.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/test/obesity_standoff_annotations_test_textual.xml", "");
-        ds.loadDataset("/home/Datasets/i2b2_2008/train 1/obesity_patient_records_training.xml", "/home/weenzeal/Documents/MasterArbeit/Datasets/i2b2_2008/train 1/obesity_standoff_textual_annotations_training.xml", "");
+        ds.loadDataset("/home/Datasets/i2b2_2008/test/obesity_patient_records_test.xml", "/home/Datasets/i2b2_2008/test/obesity_standoff_annotations_test_textual.xml", "");
+        ds.loadDataset("/home/Datasets/i2b2_2008/train 1/obesity_patient_records_training.xml", "/home/Datasets/i2b2_2008/train 1/obesity_standoff_textual_annotations_training.xml", "");
         ds.parseDataset();
         exp.setDataset(ds);
         
