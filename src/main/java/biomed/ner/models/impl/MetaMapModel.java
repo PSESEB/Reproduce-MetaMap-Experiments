@@ -34,6 +34,7 @@ import gov.nih.nlm.nls.metamap.Result;
 import gov.nih.nlm.nls.metamap.Utterance;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,7 +84,24 @@ public class MetaMapModel implements iModel {
                                  //System.out.println("   Concept Id: " + mapEv.getConceptId());
                                  //System.out.println("   Concept Name: " + mapEv.getConceptName());
 //                                System.out.println("   Preferred Name: " + mapEv.getPreferredName());
-                                String conceptText = String.join(" ",mapEv.getMatchedWords());
+                               
+                                String phrase = pcm.getPhrase().getPhraseText().toLowerCase(Locale.US);
+                                List<String> matchWords = mapEv.getMatchedWords();
+                              
+                                String conceptText;
+                                if(matchWords.size() <= 1){
+                                    conceptText = String.join(" ",mapEv.getMatchedWords());
+                                }else{
+                                    int start = phrase.indexOf(matchWords.get(0).toLowerCase(Locale.US));
+                                    int end = phrase.indexOf(matchWords.get(matchWords.size()-1).toLowerCase(Locale.US))+ matchWords.get(matchWords.size()-1).length();
+                                    try {
+                                        
+                                        conceptText = phrase.substring(start, end);
+                                    } catch (IndexOutOfBoundsException e) {
+                                        conceptText = String.join(" ",mapEv.getMatchedWords());
+                                    }
+                                }
+                 
                                if(cui){
                                    conceptText = mapEv.getConceptId();
                                }

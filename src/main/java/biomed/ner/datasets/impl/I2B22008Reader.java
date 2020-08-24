@@ -228,12 +228,24 @@ public class I2B22008Reader {
         this.labelData = this.intermediateAnnotations;
         
        this.parsedInput.forEach((k,v) -> this.parsedInput.put(k, k+"\t\t"+v));
+              
+               for(String id : this.labelData.get("CAD")){
+                   System.out.println(this.parsedInput.get(id));
+               }
             
         
     }
 
     public Map<String, String> getInputData() {
+         Map<String,String> parsedInp = new HashMap();
+         List<String> l = new ArrayList<>(this.parsedInput.keySet());
+          for(int i = 0 ; i < 3 ;i++){
+              
+              parsedInp.put(l.get(i), this.parsedInput.get(l.get(i)));
+          }
+  
             return this.parsedInput;
+            //return parsedInp;
     }
 
     public Map<String,List<String>> getLabelData() {

@@ -107,7 +107,7 @@ public class ResultCSV {
             models.put(keySplit[0], v);
             dataModelVal.put(keySplit[1], models);
         });
-        System.out.println(dataModelVal.toString());
+        
     }
 
     /**
@@ -215,7 +215,7 @@ public class ResultCSV {
                         entityModelValueMap.put(entityModelName[0], modelMap);
 
                     }
-
+                    System.out.println(entityModelValueMap.toString());
                     fr = null;
                     br = null;
 
@@ -245,7 +245,7 @@ public class ResultCSV {
                 }
 
             } else {
-                Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE, null, "Path " + path + " jeeds to be a directory and not a file!");
+                Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE, null, "Path " + path + " needs to be a directory and not a file!");
             }
 
         } else {

@@ -71,7 +71,7 @@ public class AtomStringLabel {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.term);
+        hash = 59 * hash + Objects.hashCode(this.term.toLowerCase());
         hash = 59 * hash + this.startOffset;
         hash = 59 * hash + this.endOffset;
         return hash;

@@ -225,6 +225,9 @@ public class Experiment {
         setComparisons.add(outSet);
         setComparisons.add(intersection);
         
+//        System.out.println("LABELS: " + labelSet.toString());
+//        System.out.println("MODEL OUTS : "+ outSet.toString());
+//        
         return setComparisons;
         
     }
