@@ -24,6 +24,7 @@ import biomed.ner.models.iModel;
 import biomed.ner.structure.AnnotatedDataPoint;
 import biomed.ner.structure.AnnotatedStringDataPoint;
 import biomed.ner.structure.AtomStringLabel;
+import gov.nih.nlm.nls.metamap.AcronymsAbbrevs;
 import gov.nih.nlm.nls.metamap.Ev;
 import gov.nih.nlm.nls.metamap.Mapping;
 import gov.nih.nlm.nls.metamap.MetaMapApi;
@@ -33,8 +34,10 @@ import gov.nih.nlm.nls.metamap.Position;
 import gov.nih.nlm.nls.metamap.Result;
 import gov.nih.nlm.nls.metamap.Utterance;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,23 +77,50 @@ public class MetaMapModel implements iModel {
         
         
         List<Result> resultList = api.processCitationsFromString(fullText);
+       
 
         for (Result res : resultList) {
+           
+            Map<String,String> cuiAbrv = new HashMap();
+            List<AcronymsAbbrevs> aaList;
+            try {
+                    aaList = res.getAcronymsAbbrevsList();
+                    if (aaList.size() > 0) {
+
+                    for (AcronymsAbbrevs ab: aaList) {
+                        if(ab.getCUIList().size() > 0){
+                            cuiAbrv.put(ab.getCUIList().get(0), ab.getAcronym());
+                           
+                        }
+                        }
+
+                    }
+                  
+                } catch (Exception ex) {
+                    Logger.getLogger(MetaMapModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             try {
                 for (Utterance utterance : res.getUtteranceList()) {
                     for (PCM pcm : utterance.getPCMList()) {
                         for (Mapping map : pcm.getMappingList()) {
+                            
                             for (Ev mapEv : map.getEvList()) {
                                  //System.out.println("   Concept Id: " + mapEv.getConceptId());
                                  //System.out.println("   Concept Name: " + mapEv.getConceptName());
 //                                System.out.println("   Preferred Name: " + mapEv.getPreferredName());
                                
+                               
+                                
+                                
                                 String phrase = pcm.getPhrase().getPhraseText().toLowerCase(Locale.US);
                                 List<String> matchWords = mapEv.getMatchedWords();
-                              
                                 String conceptText;
                                 if(matchWords.size() <= 1){
+                                 
                                     conceptText = String.join(" ",mapEv.getMatchedWords());
+                                 
+                                    
                                 }else{
                                     int start = phrase.indexOf(matchWords.get(0).toLowerCase(Locale.US));
                                     int end = phrase.indexOf(matchWords.get(matchWords.size()-1).toLowerCase(Locale.US))+ matchWords.get(matchWords.size()-1).length();
@@ -98,16 +128,23 @@ public class MetaMapModel implements iModel {
                                         
                                         conceptText = phrase.substring(start, end);
                                     } catch (IndexOutOfBoundsException e) {
-                                        conceptText = String.join(" ",mapEv.getMatchedWords());
+                                             if(cuiAbrv.get(mapEv.getConceptId()) != null){
+                                                 conceptText = cuiAbrv.get(mapEv.getConceptId()); 
+                                            }else{
+                                                 conceptText = String.join(" ",mapEv.getMatchedWords());
+                                                
+                                            }     
+                                        
                                     }
                                 }
-                 
+                              
                                if(cui){
                                    conceptText = mapEv.getConceptId();
                                }
 //                                System.out.println("   Matched Words: " + String.join(" ",mapEv.getMatchedWords()));
 //                                System.out.println("   Positional Info: " + mapEv.getPositionalInfo());
                                 for(Position pos : mapEv.getPositionalInfo()){
+                                   
                                     AtomStringLabel asl = new AtomStringLabel(conceptText, pos.getX(), pos.getX()+pos.getY());
                                     result.addConcept(asl);
                                 }
