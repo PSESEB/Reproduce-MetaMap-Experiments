@@ -49,17 +49,17 @@ public class NERMethodsReproduction {
         ResultCSV rcsv = new ResultCSV();
        
         //Share
-        Experiment shareMML = ExperimentFactory.getExperiment("share", "MML");
-        rcsv.addExperimentResults(shareMML, shareMML.runExperiment());
-        shareMML = null;
-        
-        Experiment shareMM = ExperimentFactory.getExperiment("share", "MM");
-        rcsv.addExperimentResults(shareMM, shareMM.runExperiment());
-        shareMM = null;
-        
-        Experiment shareCTakes = ExperimentFactory.getExperiment("share", "ctakes");
-        rcsv.addExperimentResults(shareCTakes, shareCTakes.runExperiment());
-        shareCTakes = null;
+//        Experiment shareMML = ExperimentFactory.getExperiment("share", "MML");
+//        rcsv.addExperimentResults(shareMML, shareMML.runExperiment());
+//        shareMML = null;
+//        
+//        Experiment shareMM = ExperimentFactory.getExperiment("share", "MM");
+//        rcsv.addExperimentResults(shareMM, shareMM.runExperiment());
+//        shareMM = null;
+//        
+//        Experiment shareCTakes = ExperimentFactory.getExperiment("share", "ctakes");
+//        rcsv.addExperimentResults(shareCTakes, shareCTakes.runExperiment());
+//        shareCTakes = null;
         
         //NCBI
           Experiment ncbiCTakes = ExperimentFactory.getExperiment("CustomNCBI", "ctakes");
@@ -77,17 +77,17 @@ public class NERMethodsReproduction {
       
         
         //i2b2 2010
-          Experiment i2b22010MML = ExperimentFactory.getExperiment("i2b22010", "MML");
-        rcsv.addExperimentResults(i2b22010MML, i2b22010MML.runExperiment());
-        i2b22010MML = null;
-        
-        Experiment i2b22010MM = ExperimentFactory.getExperiment("i2b22010", "MM");
-        rcsv.addExperimentResults(i2b22010MM, i2b22010MM.runExperiment());
-        i2b22010MM = null;
-        
-        Experiment i2b22010CTakes = ExperimentFactory.getExperiment("i2b22010", "ctakes");
-        rcsv.addExperimentResults(i2b22010CTakes, i2b22010CTakes.runExperiment());
-        i2b22010CTakes = null;
+//        Experiment i2b22010MML = ExperimentFactory.getExperiment("i2b22010", "MML");
+//        rcsv.addExperimentResults(i2b22010MML, i2b22010MML.runExperiment());
+//        i2b22010MML = null;
+//        
+//        Experiment i2b22010MM = ExperimentFactory.getExperiment("i2b22010", "MM");
+//        rcsv.addExperimentResults(i2b22010MM, i2b22010MM.runExperiment());
+//        i2b22010MM = null;
+//        
+//        Experiment i2b22010CTakes = ExperimentFactory.getExperiment("i2b22010", "ctakes");
+//        rcsv.addExperimentResults(i2b22010CTakes, i2b22010CTakes.runExperiment());
+//        i2b22010CTakes = null;
         
         //LHC bio
         
