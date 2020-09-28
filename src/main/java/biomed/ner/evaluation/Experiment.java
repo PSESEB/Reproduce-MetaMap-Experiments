@@ -44,6 +44,10 @@ public class Experiment {
      * Model for Experiment
      */
     private iModel model;
+    
+    public int labelSize;
+    
+    public int errorSize;
 
     public iDatasetReader getDataset() {
         return dataset;
@@ -201,7 +205,15 @@ public class Experiment {
         Set<AtomStringLabel> labelSet = labels.getAnnotatedConcepts();
         Set<AtomStringLabel> outSet = modelOut.getAnnotatedConcepts();
        
-     
+        int labelSizee = labelSet.size();
+        int errorSizee = 0;
+        for(AtomStringLabel l : labelSet){
+            for(AtomStringLabel o : outSet){
+                errorSizee += l.compNumbers(o);
+            }
+        }
+        this.labelSize += labelSizee;
+        this.errorSize += errorSizee;
         
         //Need copy since remove operation is inplace and does not return modified version
         Set<AtomStringLabel> labelCopy = new HashSet(labelSet);
@@ -225,8 +237,8 @@ public class Experiment {
         setComparisons.add(outSet);
         setComparisons.add(intersection);
         
-//        System.out.println("LABELS: " + labelSet.toString());
-//        System.out.println("MODEL OUTS : "+ outSet.toString());
+        System.out.println("LABELS: " + labelSet.toString());
+        System.out.println("MODEL OUTS : "+ outSet.toString());
         
         return setComparisons;
         

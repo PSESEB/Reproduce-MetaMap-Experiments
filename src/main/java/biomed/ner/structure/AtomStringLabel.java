@@ -77,9 +77,26 @@ public class AtomStringLabel {
         return hash;
     }
     
+    public int compNumbers(AtomStringLabel other)
+    {
+        if(this.startOffset == other.startOffset && this.endOffset == other.endOffset){
+            if(!this.term.toLowerCase().equals(other.term.toLowerCase())){
+//            System.out.println("=======");
+//            System.out.println(this.term);
+//            System.out.println(other.term);
+//            System.out.println("=======");
+            return 1;
+            }
+        }
+        return 0;
+    }
+    
     @Override
     public String toString(){
-        return this.startOffset + "|"+this.endOffset + "|"+this.term;
+        if(this.endOffset-this.startOffset > this.term.length()){
+            return this.startOffset + "|"+this.endOffset + "|"+this.term;
+        } 
+        return "";
     }
     
     
