@@ -1,5 +1,8 @@
 # Reproduce-MetaMap-Experiments
 
+This repro allows to reproduce the Experiments carried out in the following publications:  
+(MetaMap Lite)[https://academic.oup.com/jamia/article/24/4/841/2961848]
+(Comparison of MetaMap and cTAKES for entity extraction in clinical notes)[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6157281/]
 ## Map DUI to CUI
 https://ii.nlm.nih.gov/MRCOC/MRCOC_Doc_2016.pd  
 `grep '|MSH|MH|' MRCONSO.RRF | grep "|ENG|" | cut -d'|' -f1,14,15 > MHcui`
