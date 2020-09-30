@@ -91,7 +91,7 @@ public class NERMethodsReproduction {
         
         //LHC bio
         
-          Experiment lhcbioMML = ExperimentFactory.getExperiment("lhcbio", "MML");
+        Experiment lhcbioMML = ExperimentFactory.getExperiment("lhcbio", "MML");
         rcsv.addExperimentResults(lhcbioMML, lhcbioMML.runExperiment());
         lhcbioMML = null;
         Experiment lhcbioMM = ExperimentFactory.getExperiment("lhcbio", "MM");
@@ -101,8 +101,11 @@ public class NERMethodsReproduction {
         Experiment lhcbioCTakes = ExperimentFactory.getExperiment("lhcbio", "ctakes");
         rcsv.addExperimentResults(lhcbioCTakes, lhcbioCTakes.runExperiment());
         lhcbioCTakes = null;
+        
+
         //LHC clin
-          Experiment lhcclinMML = ExperimentFactory.getExperiment("lhcclin", "MML");
+        
+        Experiment lhcclinMML = ExperimentFactory.getExperiment("lhcclin", "MML");
         rcsv.addExperimentResults(lhcclinMML, lhcclinMML.runExperiment());
         lhcclinMML = null;
         
@@ -132,7 +135,7 @@ public class NERMethodsReproduction {
 //          rcsv.addCompleteDocResults(expCompMML.runExperiment(true),"SingleCUI");
 //          rcsv.addCompleteDocResults(expCompMML.runExperiment(false),"MultipleCUIs");
 //          expCompMML = null;
-          rcsv.writeResultsToCSV("/home");
+          rcsv.writeResultsToCSV("/home/results");
             
         
       

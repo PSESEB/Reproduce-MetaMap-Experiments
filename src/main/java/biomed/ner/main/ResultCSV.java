@@ -120,6 +120,9 @@ public class ResultCSV {
         this.parseToOutputFormat();
        
         File f = new File(path);
+        if(!f.exists()){
+            f.mkdir();
+        }
         //check if path is proper directory
         if (f.exists()) {
             if (f.isDirectory()) {
@@ -245,11 +248,11 @@ public class ResultCSV {
                 }
 
             } else {
-                Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE, null, "Path " + path + " needs to be a directory and not a file!");
+                Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE, "Path " + path + " needs to be a directory and not a file!", "");
             }
 
         } else {
-            Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE, null, "Path " + path + " can't be found.");
+            Logger.getLogger(ResultCSV.class.getName()).log(Level.SEVERE,  "Path " + path + " can't be found.","");
         }
     }
 
