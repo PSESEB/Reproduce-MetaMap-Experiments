@@ -12,6 +12,13 @@ To run the maven build successfully you need a complete MetaMap, MetaMap Lite an
 
 * cTAKES installation instructions can be found [here](https://cwiki.apache.org/confluence/display/CTAKES/cTAKES+4.0+User+Install+Guide). After the installation a link to the cTAKES resources needs to be created in the repo as seen [here](src/main/resources).
 
+
+## Datasets
+
+For the necessary datasets we refer to the reproduction protocol, that links to a docker-container that contains the NCBI and LHC datasets.
+The NCBI and LHC datasets can be extracted from the docker-container. Depending on where they are stored, the dataset paths in [ExperimentFactory.java](src/main/java/biomed/ner/evaluation/ExperimentFactory.java) need to be updated.
+The reproduction-protocol also contains instructions on how to get access to the other datasets. 
+
 [//]: # "## Map DUI to CUI"
 [//]: # "https://ii.nlm.nih.gov/MRCOC/MRCOC_Doc_2016.pd " 
 [//]: # "`grep '|MSH|MH|' MRCONSO.RRF | grep |ENG| | cut -d'|' -f1,14,15 > MHcui`"
