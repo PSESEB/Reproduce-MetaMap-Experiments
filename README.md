@@ -13,7 +13,6 @@ This repro allows to reproduce the Experiments carried out in the following publ
 
 [//]: # "## Map MSH CUI to CUI"
 [//]: # "`grep '|MSH|NM|' MRCONSO.RRF | grep |ENG| | cut -d'|' -f1,14,15 | grep -E '\|C[0-9]{1,6}\|' > MHCcui"
-`
 
 [//]: # "# TODOS"
 
