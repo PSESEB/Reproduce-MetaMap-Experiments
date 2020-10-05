@@ -1,8 +1,16 @@
-# Reproduce-MetaMap-Experiments
+# Reproduce Biomedical NER Experiments
 
 This repro allows to reproduce the Experiments carried out in the following publications:  
 [MetaMap Lite](https://academic.oup.com/jamia/article/24/4/841/2961848)  
-[Comparison of MetaMap and cTAKES for entity extraction in clinical notes](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6157281/)    
+[Comparison of MetaMap and cTAKES for entity extraction in clinical notes](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6157281/)  
+
+## Dependencies
+To run the maven build successfully you need a complete MetaMap, MetaMap Lite and cTAKES installation.
+* MetaMap installation instructions can be found [here](https://metamap.nlm.nih.gov/JavaApi.shtml). Once MetaMap is installed you need to start the server so the java API can access MetaMap as explained [here](https://metamap.nlm.nih.gov/Docs/README_javaapi.shtml).
+
+* MetaMap Lite installation instructions can be found [here](https://metamap.nlm.nih.gov/MetaMapLite.shtml). Originally it was installed under `/opt/MetaMap/public_mm_lite`. If an other installation folder is chosen, the paths need to be updated in the [ExperimentFactory.java](src/main/java/biomed/ner/evaluation/ExperimentFactory.java) file.
+
+* cTAKES installation instructions can be found [here](https://cwiki.apache.org/confluence/display/CTAKES/cTAKES+4.0+User+Install+Guide). After the installation a link to the cTAKES resources needs to be created in the repo as seen [here](src/main/resources).
 
 [//]: # "## Map DUI to CUI"
 [//]: # "https://ii.nlm.nih.gov/MRCOC/MRCOC_Doc_2016.pd " 
