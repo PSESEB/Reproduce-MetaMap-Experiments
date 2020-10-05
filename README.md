@@ -16,7 +16,7 @@ To run the maven build successfully you need a complete MetaMap, MetaMap Lite an
 ## Datasets
 
 For the necessary datasets we refer to the reproduction protocol, that links to a docker-container that contains the NCBI and LHC datasets.
-The NCBI and LHC datasets can be extracted from the docker-container. Depending on where they are stored, the dataset paths in [ExperimentFactory.java](src/main/java/biomed/ner/evaluation/ExperimentFactory.java) need to be updated.
+The NCBI and LHC datasets can be extracted from the docker-container. Depending on where they are stored, the dataset paths in [ExperimentFactory.java](src/main/java/biomed/ner/evaluation/ExperimentFactory.java) need to be updated.  
 The reproduction-protocol also contains instructions on how to get access to the other datasets. 
 
 [//]: # "## Map DUI to CUI"
